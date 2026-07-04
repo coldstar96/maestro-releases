@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maestro CLI — reference</title>
+  <meta name="description" content="Maestro CLI reference: list, open, focus, send, send-key, close, move, help — one binary, one socket.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/copy.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html"><span class="logo-dots"><span></span><span></span><span></span></span>maestro</a>
+      <nav class="site-nav">
+        <a href="index.html#features">Features</a>
+        <a href="cli.html">CLI docs</a>
+        <a href="https://github.com/coldstar96/maestro-releases/releases">Releases</a>
+        <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="docs-layout">
+      <nav class="docs-nav">
+        <a href="#concepts">Concepts</a>
+        <a href="#install">Get the CLI</a>
+        <a href="#targeting">Targeting</a>
+        <div class="nav-group">Verbs</div>
+        <a href="#verb-list">list</a>
+        <a href="#verb-open">open</a>
+        <a href="#verb-focus">focus</a>
+        <a href="#verb-send">send</a>
+        <a href="#verb-send-key">send-key</a>
+        <a href="#verb-close">close</a>
+        <a href="#verb-move">move</a>
+        <a href="#verb-help">help</a>
+        <div class="nav-group">More</div>
+        <a href="#examples">Examples</a>
+      </nav>
+
+      <main class="docs-main">
+        <h1>Maestro CLI</h1>
+        <p class="lead">One binary, one socket. <code>maestro</code> talks to the running app over its control socket — the same verbs drive the UI, your scripts, and the agents themselves.</p>
+
+        <h2 id="concepts">Concepts</h2>
+        <p>Every maestro-managed terminal runs inside a <strong>session</strong> (a tab in the app). Sessions form a tree — a session can have child sessions — and windows hold session trees. The env var <code>$MAESTRO_SESSION_ID</code> holds the current session's id; "this session"/"this tab" means that id.</p>
+
+        <h2 id="install">Get the CLI</h2>
+        <p>Sessions spawned by Maestro already have a <code>maestro</code> shim on their <code>PATH</code>. For a global command in your own shells, symlink the launcher out of the app bundle:</p>
+        <pre class="code-block"><code>ln -sf /Applications/Maestro.app/Contents/Resources/bin/maestro /usr/local/bin/maestro</code></pre>
+
+        <h2 id="targeting">Targeting</h2>
+        <p><code>&lt;target&gt;</code> is a session-id prefix (e.g. <code>3f2a</code>) or a unique title substring (case-insensitive). Run <code>maestro list</code> to see ids and titles; use <code>"$MAESTRO_SESSION_ID"</code> to target the current session.</p>
+
+        <h2 id="verbs">Verbs</h2>
+
+        <div class="verb" id="verb-list">
+          <h3>maestro list</h3>
+          <p>All sessions as JSON (id, title, kind, status, cwd, parentId, windowId).</p>
+          <pre class="code-block"><code>maestro list | jq '.[] | {id, title, status}'</code></pre>
+        </div>
+
+        <div class="verb" id="verb-open">
+          <h3>maestro open --kind &lt;claude|codex|shell&gt; [--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;]</h3>
+          <p>Open a new session.</p>
+          <ul class="flags">
+            <li><code>--kind</code> claude, codex, or shell (default shell)</li>
+            <li><code>--child</code> / <code>--sibling</code> place relative to the FOCUSED session (parent and cwd resolved server-side)</li>
+            <li><code>--parent &lt;id&gt;</code> nests under a specific session</li>
+            <li><code>--cwd &lt;dir&gt;</code> working directory</li>
+            <li><code>--title &lt;t&gt;</code> tab title</li>
+          </ul>
+          <pre class="code-block"><code>maestro open --kind claude --child --title "api tests"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-focus">
+          <h3>maestro focus &lt;target&gt;</h3>
+          <p>Focus a session (bring its tab to front).</p>
+          <pre class="code-block"><code>maestro focus "api tests"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-send">
+          <h3>maestro send &lt;target&gt; "&lt;text&gt;"</h3>
+          <p>Type text into a session's terminal. Does <strong>not</strong> press Enter — follow with <code>send-key enter</code>.</p>
+          <pre class="code-block"><code>maestro send "api tests" "npm test" && maestro send-key "api tests" enter</code></pre>
+        </div>
+
+        <div class="verb" id="verb-send-key">
+          <h3>maestro send-key &lt;target&gt; &lt;enter|escape|ctrl-c|tab&gt;</h3>
+          <p>Send a key press to a session.</p>
+          <pre class="code-block"><code>maestro send-key "api tests" ctrl-c</code></pre>
+        </div>
+
+        <div class="verb" id="verb-close">
+          <h3>maestro close &lt;target&gt; [--force] [--cascade]</h3>
+          <p>Close a session. <code>--cascade</code> closes its whole subtree (children first); <code>--force</code> bypasses the busy/dirty guard.</p>
+          <pre class="code-block"><code>maestro close "$MAESTRO_SESSION_ID" --cascade --force</code></pre>
+        </div>
+
+        <div class="verb" id="verb-move">
+          <h3>maestro move &lt;target&gt; [up|down] [--before &lt;id&gt;] [--after &lt;id&gt;] [--child-of &lt;id&gt;] [--promote] [--to-window &lt;id&gt;] [--new-window]</h3>
+          <p>Reorder or re-parent a session, or move it to another/new window. <code>--promote</code> lifts it to root level.</p>
+          <pre class="code-block"><code>maestro move "$MAESTRO_SESSION_ID" --new-window</code></pre>
+        </div>
+
+        <div class="verb" id="verb-help">
+          <h3>maestro help</h3>
+          <p>Print the built-in help.</p>
+        </div>
+
+        <h2 id="examples">Examples</h2>
+        <pre class="code-block"><code># claude session nested under the focused one
+maestro open --kind claude --child --title "api tests"
+
+# shell tab next to the focused session
+maestro open --kind shell --sibling
+
+# run the tests in it
+maestro send "api tests" "npm test" && maestro send-key "api tests" enter
+
+# pop this session out into its own window
+maestro move "$MAESTRO_SESSION_ID" --new-window
+
+# close this session and its whole subtree
+maestro close "$MAESTRO_SESSION_ID" --cascade --force</code></pre>
+      </main>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 coldstar96</span>
+      <a href="https://github.com/coldstar96/maestro-releases/releases">Releases</a>
+      <a href="cli.html">CLI docs</a>
+      <a href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download</a>
+    </div>
+  </footer>
+</body>
+</html>
