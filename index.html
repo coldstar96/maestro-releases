@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maestro — conduct a fleet of AI coding agents</title>
+  <meta name="description" content="Maestro is a native macOS terminal multiplexer for orchestrating many AI coding agents in parallel — Claude Code, Codex, and ordinary shells.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/copy.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html"><span class="logo-dots"><span></span><span></span><span></span></span>maestro</a>
+      <nav class="site-nav">
+        <a href="index.html#features">Features</a>
+        <a href="cli.html">CLI docs</a>
+        <a href="https://github.com/coldstar96/maestro-releases/releases">Releases</a>
+        <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Conduct a fleet of AI coding agents</h1>
+      <p class="pitch">Maestro is a native macOS terminal multiplexer built for parallelism: run many Claude Code and Codex sessions at once, see every agent's status at a glance, and dispatch new work in plain language — without ever blocking.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download for macOS</a>
+        <a class="btn btn-ghost" href="cli.html">CLI docs</a>
+      </div>
+      <p class="btn-note">macOS · Apple Silicon · free — unsigned build: first launch is right-click → Open</p>
+
+      <div class="mockup">
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-title">Maestro — ~/dev/api</span>
+          </div>
+          <div class="mock-body">
+            <aside class="mock-sidebar">
+              <div class="mock-project">api-server</div>
+              <div class="mock-card mock-card--selected"><span class="name">fix flaky ci test</span><span class="pill pill--working">working 2m14</span></div>
+              <div class="mock-card mock-card--child"><span class="name">unit tests</span><span class="pill pill--background">background</span></div>
+              <div class="mock-card"><span class="name">refactor auth</span><span class="pill pill--waiting">waiting 32s</span></div>
+              <div class="mock-project">website</div>
+              <div class="mock-card"><span class="name">docs sweep</span><span class="pill pill--idle">idle</span></div>
+            </aside>
+            <div class="mock-term">
+              <div><span class="dim">~/dev/api on master</span></div>
+              <div><span class="blue">❯</span> claude "make the retry test deterministic"</div>
+              <div><span class="dim">● Reading test/retry.spec.ts</span></div>
+              <div><span class="dim">● Patching backoff to injectable clock</span></div>
+              <div><span class="dim">● Running tests…</span></div>
+              <div><span class="ok">✓ 214 passed</span> <span class="dim">in 3.9s</span></div>
+              <div><span class="dim">Committed 3f2a9c1 · opening PR #482</span></div>
+            </div>
+            <div class="mock-runbar"><span>⌘ maestro ›</span><span>fix the flaky test in ci and open a PR…</span><span class="chip chip--live">run #3 · working</span><span class="chip">run #2 · done</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="features">
+    <section class="feature container">
+      <div class="feature-text">
+        <div class="feature-kicker">Orchestration</div>
+        <h2>Type it. It's already running.</h2>
+        <p>An always-on natural-language field sits at the bottom of every window. Each query dispatches a non-blocking orchestration run to a warm-pooled agent — the field is ready again the instant you hit Enter. Runs stream live status chips and report back when they finish.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-runbar">
+          <span>⌘ maestro ›</span>
+          <span>add rate limiting to the login route…</span>
+        </div>
+        <div class="mock-runbar" style="margin-top:12px;">
+          <span class="chip chip--live">run #7 · working 0m48</span>
+          <span class="chip">run #6 · done</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
+        <div class="feature-kicker">Situational awareness</div>
+        <h2>Every agent, one glance.</h2>
+        <p>Projects group sessions into a lineage tree of status cards: working, waiting, background, needs-your-input — each with a live timer. Tabs show the model and context size; unread dots and native macOS notifications catch you up the moment an agent needs you.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-card mock-card--selected"><span class="name">migrate to esm</span><span class="pill pill--working">working 4m02</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">write changelog</span><span class="pill pill--waiting">waiting 18s</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">nightly backup</span><span class="pill pill--idle">idle</span></div>
+      </div>
+    </section>
+
+    <section class="feature container">
+      <div class="feature-text">
+        <div class="feature-kicker">One control plane</div>
+        <h2>The UI, the CLI, and the agents share one language.</h2>
+        <p>A single <code>maestro</code> binary over a unix socket. Everything the app can do, a script can do — and agents can too: they spawn siblings, fan out subtasks, and manage their own sessions.</p>
+      </div>
+      <div class="feature-visual">
+        <pre class="code-block"><code>maestro list                        # every session as JSON
+maestro open --kind claude --child  # nest an agent under this one
+maestro send "api tests" "npm test"
+maestro send-key "api tests" enter
+maestro move "$MAESTRO_SESSION_ID" --new-window</code></pre>
+        <p style="margin-bottom:0;"><a href="cli.html">Read the CLI docs →</a></p>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
+        <div class="feature-kicker">Continuity</div>
+        <h2>Quit without fear.</h2>
+        <p>Relaunch and everything is back: windows, the session tree, scrollback — and true Claude/Codex resume, so conversations pick up where they left off. ⌘⇧T reopens closed tabs. The terminal itself keeps up: WebGL rendering, fast scrolling, ⌘P palette, font zoom, macOS editing keys, themes.</p>
+      </div>
+      <div class="feature-visual">
+        <div>⌘⇧T  reopen closed tab</div>
+        <div>⌘P   jump to any session</div>
+        <div>⌘,   settings</div>
+        <div>⌘1–9 switch tabs</div>
+      </div>
+    </section>
+  </main>
+
+  <section class="download" id="download">
+    <div class="container">
+      <h2>Get Maestro</h2>
+      <p class="req">macOS on Apple Silicon · v0.1.0</p>
+      <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download Maestro-arm64.dmg</a>
+      <p class="btn-note">Unsigned build: first launch is right-click → Open. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 coldstar96</span>
+      <a href="https://github.com/coldstar96/maestro-releases/releases">Releases</a>
+      <a href="cli.html">CLI docs</a>
+      <a href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download</a>
+    </div>
+  </footer>
+</body>
+</html>
