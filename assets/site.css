@@ -18,7 +18,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 body {
   margin: 0;
   background: var(--bg);
@@ -58,11 +58,11 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 /* buttons */
 .btn { display: inline-block; border-radius: 8px; padding: 10px 22px; font-size: 15px; font-weight: 600; border: 1px solid transparent; cursor: pointer; }
 .btn:hover { text-decoration: none; }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: #5b8edb; }
+.btn-primary { background: #2f6fc9; color: #fff; }
+.btn-primary:hover { background: #4a7fd0; }
 .btn-ghost { border-color: var(--border-strong); color: var(--text); }
 .btn-ghost:hover { background: var(--card); }
-.btn-note { font-size: 13px; color: var(--subtle); margin-top: 10px; }
+.btn-note { font-size: 13px; color: var(--muted); margin-top: 10px; }
 
 /* hero */
 .hero { padding: 88px 0 48px; text-align: center; }
@@ -89,6 +89,7 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .pill--waiting { background: var(--waiting); }
 .pill--idle { background: var(--idle); }
 .pill--background { background: #4fc3f7; }
+.pill--prompt { background: var(--prompt); }
 .mock-term { padding: 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: #cccccc; background: var(--surface); overflow: hidden; }
 .mock-term .dim { color: var(--subtle); }
 .mock-term .ok { color: var(--idle); }

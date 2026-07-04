@@ -5,10 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.type = 'button'
     btn.textContent = 'Copy'
     btn.addEventListener('click', async () => {
-      const code = pre.querySelector('code')
-      await navigator.clipboard.writeText((code ?? pre).innerText)
-      btn.textContent = 'Copied'
-      setTimeout(() => { btn.textContent = 'Copy' }, 1200)
+      try {
+        const code = pre.querySelector('code')
+        await navigator.clipboard.writeText((code ?? pre).innerText)
+        btn.textContent = 'Copied'
+        setTimeout(() => { btn.textContent = 'Copy' }, 1200)
+      } catch {
+        btn.textContent = 'Copy failed'
+        setTimeout(() => { btn.textContent = 'Copy' }, 1200)
+        return
+      }
     })
     pre.appendChild(btn)
   }
