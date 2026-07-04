@@ -68,6 +68,34 @@
   <main id="features">
     <section class="feature container">
       <div class="feature-text">
+        <div class="feature-kicker">Continuity</div>
+        <h2>Quit without fear.</h2>
+        <p>Relaunch and everything is back: windows, the session tree, scrollback — and true Claude/Codex resume, so conversations pick up where they left off. ⌘⇧T reopens closed tabs. The terminal itself keeps up: WebGL rendering, fast scrolling, ⌘P palette, font zoom, macOS editing keys, themes.</p>
+      </div>
+      <div class="feature-visual">
+        <div>⌘⇧T  reopen closed tab</div>
+        <div>⌘P   jump to any session</div>
+        <div>⌘,   settings</div>
+        <div>⌘1–9 switch tabs</div>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
+        <div class="feature-kicker">Situational awareness</div>
+        <h2>Every agent, one glance.</h2>
+        <p>Projects group sessions into a lineage tree of status cards — working, waiting, background — each with a live timer. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, and a native macOS notification takes you straight to the right tab. Tabs show the model and context size at a glance.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-card mock-card--selected"><span class="name">fix flaky ci test</span><span class="pill pill--working">working 2m14</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">refactor auth</span><span class="pill pill--prompt">needs input</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">migration plan</span><span class="pill pill--review">review ready</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">docs sweep</span><span class="pill pill--waiting">waiting 32s</span></div>
+      </div>
+    </section>
+
+    <section class="feature container">
+      <div class="feature-text">
         <div class="feature-kicker">Orchestration</div>
         <h2>Type it. It's already running.</h2>
         <p>An always-on natural-language field sits at the bottom of every window. Each query dispatches a non-blocking orchestration run to a warm-pooled agent — the field is ready again the instant you hit Enter. Runs stream live status chips and report back when they finish.</p>
@@ -86,19 +114,6 @@
 
     <section class="feature container feature--flip">
       <div class="feature-text">
-        <div class="feature-kicker">Situational awareness</div>
-        <h2>Every agent, one glance.</h2>
-        <p>Projects group sessions into a lineage tree of status cards: working, waiting, background, needs-your-input — each with a live timer. Tabs show the model and context size; unread dots and native macOS notifications catch you up the moment an agent needs you.</p>
-      </div>
-      <div class="feature-visual">
-        <div class="mock-card mock-card--selected"><span class="name">migrate to esm</span><span class="pill pill--working">working 4m02</span></div>
-        <div class="mock-card" style="margin-top:8px;"><span class="name">write changelog</span><span class="pill pill--waiting">waiting 18s</span></div>
-        <div class="mock-card" style="margin-top:8px;"><span class="name">migration plan</span><span class="pill pill--prompt">needs input</span></div>
-      </div>
-    </section>
-
-    <section class="feature container">
-      <div class="feature-text">
         <div class="feature-kicker">One control plane</div>
         <h2>The UI, the CLI, and the agents share one language.</h2>
         <p>A single <code>maestro</code> binary over a unix socket. Everything the app can do, a script can do — and agents can too: they spawn siblings, fan out subtasks, and manage their own sessions.</p>
@@ -110,20 +125,6 @@ maestro send "api tests" "npm test"
 maestro send-key "api tests" enter
 maestro move "$MAESTRO_SESSION_ID" --new-window</code></pre>
         <p style="margin-bottom:0;"><a href="cli.html">Read the CLI docs →</a></p>
-      </div>
-    </section>
-
-    <section class="feature container feature--flip">
-      <div class="feature-text">
-        <div class="feature-kicker">Continuity</div>
-        <h2>Quit without fear.</h2>
-        <p>Relaunch and everything is back: windows, the session tree, scrollback — and true Claude/Codex resume, so conversations pick up where they left off. ⌘⇧T reopens closed tabs. The terminal itself keeps up: WebGL rendering, fast scrolling, ⌘P palette, font zoom, macOS editing keys, themes.</p>
-      </div>
-      <div class="feature-visual">
-        <div>⌘⇧T  reopen closed tab</div>
-        <div>⌘P   jump to any session</div>
-        <div>⌘,   settings</div>
-        <div>⌘1–9 switch tabs</div>
       </div>
     </section>
   </main>
