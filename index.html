@@ -97,6 +97,20 @@
 
     <section class="feature container">
       <div class="feature-text">
+        <div class="feature-kicker">Task structure</div>
+        <h2>Big tasks become trees, not tab soup.</h2>
+        <p>Every session can have children: spawn a child agent for a subtask, a sibling for parallel work — <code>⌘T</code> and <code>⌥⌘T</code> from the keyboard, or <code>--child</code> and <code>--sibling</code> from the CLI. The explorer shows the whole lineage per project, and closing a parent can cascade through its finished subtree in one stroke. Agents structure their own work the same way: a session fans its subtasks out into child sessions and reports back up the tree.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-card"><span class="name">build auth feature</span><span class="pill pill--working">working 4:02</span></div>
+        <div class="mock-card mock-card--child" style="margin-top:8px;"><span class="name">write unit tests</span><span class="pill pill--working">working 1:12</span></div>
+        <div class="mock-card mock-card--grandchild" style="margin-top:8px;"><span class="name">fix fixtures</span><span class="pill pill--prompt">prompt 0:09</span></div>
+        <div class="mock-card mock-card--child" style="margin-top:8px;"><span class="name">api docs</span><span class="pill pill--review">review 0:41</span></div>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
         <div class="feature-kicker">Orchestration</div>
         <h2>Type it. It's already running.</h2>
         <p>An always-on natural-language field sits at the bottom of every window. Each query dispatches a non-blocking orchestration run to a warm-pooled agent — the field is ready again the instant you hit Enter. Runs stream live status chips and report back when they finish.</p>
@@ -113,7 +127,7 @@
       </div>
     </section>
 
-    <section class="feature container feature--flip">
+    <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">One control plane</div>
         <h2>The UI, the CLI, and the agents share one language.</h2>

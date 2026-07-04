@@ -84,6 +84,7 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .mock-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
 .mock-card--selected { border-color: var(--accent); background: #2d3644; }
 .mock-card--child { margin-left: 18px; }
+.mock-card--grandchild { margin-left: 36px; }
 .mock-card .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pill { margin-left: auto; font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; color: #141416; font-weight: 700; white-space: nowrap; }
 .pill--working { background: var(--working); }
