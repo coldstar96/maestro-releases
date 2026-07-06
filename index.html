@@ -26,13 +26,13 @@
   <section class="hero">
     <div class="container">
       <h1>Conduct a fleet of AI coding agents</h1>
-      <p class="pitch">Maestro is a native macOS terminal multiplexer built for parallelism: run many Claude Code and Codex sessions at once, see every agent's status at a glance, and dispatch new work in plain language — without ever blocking.</p>
+      <p class="pitch">Maestro is a native macOS terminal multiplexer built for parallelism: run many Claude Code and Codex sessions at once, see every agent's status at a glance, and dispatch new work in plain language — without ever blocking. Spend your time building, not managing terminals.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download for macOS</a>
         <a class="btn btn-ghost" href="cli.html">CLI docs</a>
       </div>
-      <pre class="code-block" style="max-width: 640px; margin: 18px auto 0"><code>curl -fsSL https://coldstar96.github.io/maestro-releases/install.sh | sh</code></pre>
-      <p class="btn-note">One command installs the app + CLI — no Gatekeeper dialog. macOS · Apple Silicon · free</p>
+      <pre class="code-block" style="max-width: 640px; margin: 18px auto 0"><code>curl -fsSL https://maestroterminal.com/install.sh | sh</code></pre>
+      <p class="btn-note">One command installs the app + CLI — signed, notarized, no Gatekeeper dialog. macOS · Apple Silicon · free</p>
 
       <div class="mockup">
         <div class="mock-window">
@@ -45,11 +45,23 @@
           <div class="mock-body">
             <aside class="mock-sidebar">
               <div class="mock-project">api-server</div>
-              <div class="mock-card mock-card--selected"><span class="name">fix flaky ci test</span><span class="pill pill--working">working 2:14</span></div>
-              <div class="mock-card mock-card--child"><span class="name">unit tests</span><span class="pill pill--background">background 12:08</span></div>
-              <div class="mock-card"><span class="name">refactor auth</span><span class="pill pill--waiting">waiting 0:32</span></div>
+              <div class="mock-card mock-card--selected">
+                <div class="mock-card-main"><div class="name">fix flaky ci test</div><div class="mock-sub">claude · master · working</div></div>
+                <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">2:14</span></span><span class="mock-meta">opus 4.8 · 82k</span></div>
+              </div>
+              <div class="mock-card mock-card--child">
+                <div class="mock-card-main"><div class="name">unit tests</div><div class="mock-sub">claude · master · background</div></div>
+                <div class="mock-card-side"><span class="pill pill--background"><span class="pill-status">background</span><span class="pill-time">12:08</span></span><span class="mock-meta">sonnet 5 · 31k</span></div>
+              </div>
+              <div class="mock-card">
+                <div class="mock-card-main"><div class="name">refactor auth</div><div class="mock-sub" style="color:var(--waiting)">waiting on npm install</div></div>
+                <div class="mock-card-side"><span class="pill pill--waiting"><span class="pill-status">waiting</span><span class="pill-time">0:32</span></span><span class="mock-meta">opus 4.8 · 54k</span></div>
+              </div>
               <div class="mock-project">website</div>
-              <div class="mock-card"><span class="name">docs sweep</span><span class="pill pill--idle">idle 15:40</span></div>
+              <div class="mock-card">
+                <div class="mock-card-main"><div class="name">docs sweep</div><div class="mock-sub">codex · main · idle</div></div>
+                <div class="mock-card-side"><span class="pill pill--idle"><span class="pill-status">idle</span><span class="pill-time">15:40</span></span><span class="mock-meta">gpt-5 · 12k</span></div>
+              </div>
             </aside>
             <div class="mock-term">
               <div><span class="dim">~/dev/api on master</span></div>
@@ -67,32 +79,142 @@
     </div>
   </section>
 
+  <section class="hook">
+    <div class="container">
+      <p class="hook-eyebrow">Sound familiar?</p>
+      <h2 class="hook-head">Running a fleet of AI agents shouldn't feel like this.</h2>
+      <div class="hook-grid">
+        <div class="hook-card">
+          <span class="hook-dot" style="background:var(--working)"></span>
+          <p>You quit the terminal — or it crashed, or auto-updated, or the machine rebooted — and every running Claude and Codex session <strong>vanishes</strong>. Now it's a stressful scramble to track them all down and pick up where you left off.</p>
+        </div>
+        <div class="hook-card">
+          <span class="hook-dot" style="background:var(--review)"></span>
+          <p>A dozen agents across five projects, and you can't remember <strong>which one is doing what</strong> — or which tab it's buried in.</p>
+        </div>
+        <div class="hook-card">
+          <span class="hook-dot" style="background:var(--waiting)"></span>
+          <p>Still working? Wedged? Finished ten minutes ago? You're clicking tab to tab just to <strong>find out each one's status</strong>.</p>
+        </div>
+        <div class="hook-card">
+          <span class="hook-dot" style="background:var(--prompt)"></span>
+          <p>One agent has been <strong>waiting on your answer</strong> the whole time — and you never noticed, so it sat idle instead of shipping.</p>
+        </div>
+      </div>
+      <p class="hook-solve"><strong>Maestro solves all of it.</strong> Sessions survive any restart and truly resume, every agent's status is one glance away, and the ones that need you come find you. Stop babysitting terminals — focus on the important work, run more tasks in parallel, and get the most out of your AI.</p>
+    </div>
+  </section>
+
   <main id="features">
     <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">Continuity</div>
-        <h2>Quit without fear.</h2>
-        <p>Relaunch and everything is back: windows, the session tree, scrollback — and true Claude/Codex resume, so conversations pick up where they left off. ⌘⇧T reopens closed tabs. The terminal itself keeps up: WebGL rendering, fast scrolling, ⌘P palette, font zoom, macOS editing keys, themes.</p>
+        <h2>Quit without fear. It keeps going.</h2>
+        <p>Relaunch and everything is back: windows, the session tree, scrollback, and true Claude/Codex resume. Better still, agents carry on by themselves — with auto-continue, an interrupted session resumes <em>and keeps working</em> after a restart, no prompt needed. Even usage limits don't stop you: Maestro flags a rate-limited agent, counts down to its reset, and continues the instant your quota is back — so long-running work finishes while you're away. ⌘⇧T reopens closed tabs, and the terminal keeps up with WebGL rendering, ⌘F find, ⌘P palette, font zoom, split panes, and light/dark themes — signed, notarized, and self-updating.</p>
       </div>
       <div class="feature-visual">
-        <div>⌘⇧T  reopen closed tab</div>
-        <div>⌘P   jump to any session</div>
-        <div>⌘,   settings</div>
-        <div>⌘1–9 switch tabs</div>
+        <div class="mock-card">
+          <div class="mock-card-main"><div class="name">refactor billing</div><div class="mock-sub" style="color:var(--limited)">rate limit · resumes in 2:14:00</div></div>
+          <div class="mock-card-side"><span class="pill pill--limited"><span class="pill-status">limited</span><span class="pill-time">2:14:00</span></span><span class="mock-meta">opus 4.8 · 71k</span></div>
+        </div>
+        <div class="mock-card" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">migrate schema</div><div class="mock-sub">claude · master · paused</div></div>
+          <div class="mock-card-side"><span class="pill pill--paused"><span class="pill-status">paused</span><span class="pill-time">1:20</span></span><span class="mock-meta">sonnet 5 · 38k</span></div>
+        </div>
+        <div class="mock-card" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">write integration tests</div><div class="mock-sub">codex · master · working</div></div>
+          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">0:12</span></span><span class="mock-meta">gpt-5 · 22k</span></div>
+        </div>
+        <div style="margin-top:14px;color:var(--subtle);font-size:12px;">↩ auto-continues on restart &amp; at limit reset</div>
       </div>
     </section>
 
     <section class="feature container feature--flip">
       <div class="feature-text">
-        <div class="feature-kicker">Situational awareness</div>
-        <h2>Every agent, one glance.</h2>
-        <p>Projects group sessions into a lineage tree of status cards — working, waiting, background — each with a live timer. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, and a native macOS notification takes you straight to the right tab. Tabs show the model and context size at a glance.</p>
+        <div class="feature-kicker">Shelves</div>
+        <h2>Put work aside — bring it right back.</h2>
+        <p>Not every session needs to be in your face. <strong>Stash</strong> the ones you're pausing onto a visible shelf; <strong>archive</strong> the finished ones into closed history to clear the sidebar. Bring any of them back — with the agent, resumed — in one click or a single CLI verb. Closing a tab archives it by default behind an undo countdown, and fuzzy search finds anything you've shelved.</p>
       </div>
       <div class="feature-visual">
-        <div class="mock-card mock-card--selected"><span class="name">fix flaky ci test</span><span class="pill pill--working">working 2:14</span></div>
-        <div class="mock-card" style="margin-top:8px;"><span class="name">refactor auth</span><span class="pill pill--prompt">prompt 0:47</span></div>
-        <div class="mock-card" style="margin-top:8px;"><span class="name">migration plan</span><span class="pill pill--review">review 1:05</span></div>
-        <div class="mock-card" style="margin-top:8px;"><span class="name">docs sweep</span><span class="pill pill--waiting">waiting 0:32</span></div>
+        <div class="mock-project">Stashed</div>
+        <div class="mock-card"><span class="name">spike: websocket transport</span><span style="margin-left:auto;color:var(--subtle);font-size:12px;">unstash ↩</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">old migration attempt</span><span style="margin-left:auto;color:var(--subtle);font-size:12px;">unstash ↩</span></div>
+        <div class="mock-project" style="margin-top:16px;">Archived · closed history</div>
+        <div class="mock-card"><span class="name">fix flaky ci test ✓</span><span style="margin-left:auto;color:var(--subtle);font-size:12px;">restore ↩</span></div>
+        <div class="mock-card" style="margin-top:8px;"><span class="name">bump deps to latest ✓</span><span style="margin-left:auto;color:var(--subtle);font-size:12px;">restore ↩</span></div>
+      </div>
+    </section>
+
+    <section class="feature container">
+      <div class="feature-text">
+        <div class="feature-kicker">Situational awareness</div>
+        <h2>Every agent, one glance.</h2>
+        <p>Projects group sessions into a lineage tree of status cards — working, waiting, background — each with a live timer. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. A notification center keeps the history. Tabs show the model and context size at a glance.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-card mock-card--selected">
+          <div class="mock-card-main"><div class="name">fix flaky ci test</div><div class="mock-sub">claude · master · working</div></div>
+          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">2:14</span></span><span class="mock-meta">opus 4.8 · 82k</span></div>
+        </div>
+        <div class="mock-card" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">refactor auth</div><div class="mock-sub" style="color:var(--prompt)">Approve the schema migration?</div></div>
+          <div class="mock-card-side"><span class="pill pill--prompt"><span class="pill-status">prompt</span><span class="pill-time">0:47</span></span><span class="mock-meta">opus 4.8 · 61k</span></div>
+        </div>
+        <div class="mock-card" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">migration plan</div><div class="mock-sub" style="color:var(--review)">Ready for you to review</div></div>
+          <div class="mock-card-side"><span class="pill pill--review"><span class="pill-status">review</span><span class="pill-time">1:05</span></span><span class="mock-meta">sonnet 5 · 44k</span></div>
+        </div>
+        <div class="mock-card" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">docs sweep</div><div class="mock-sub" style="color:var(--waiting)">waiting on your input</div></div>
+          <div class="mock-card-side"><span class="pill pill--waiting"><span class="pill-status">waiting</span><span class="pill-time">0:32</span></span><span class="mock-meta">gpt-5 · 18k</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="status-legend">
+    <div class="container">
+      <div class="feature-kicker">The vocabulary</div>
+      <h2 class="legend-head">Every state has a color.</h2>
+      <p class="legend-sub">One glance at a card's pill tells you exactly what an agent is doing — and whether it needs you.</p>
+      <div class="legend-grid">
+        <div class="legend-item"><span class="pill pill--working">working</span><span class="meaning">actively building</span></div>
+        <div class="legend-item"><span class="pill pill--background">background</span><span class="meaning">running a background task</span></div>
+        <div class="legend-item"><span class="pill pill--prompt">prompt</span><span class="meaning">needs your answer to continue</span></div>
+        <div class="legend-item"><span class="pill pill--review">review</span><span class="meaning">work is ready for you to check</span></div>
+        <div class="legend-item"><span class="pill pill--waiting">waiting</span><span class="meaning">blocked, waiting to continue</span></div>
+        <div class="legend-item"><span class="pill pill--done">done</span><span class="meaning">finished its turn</span></div>
+        <div class="legend-item"><span class="pill pill--paused">paused</span><span class="meaning">interrupted — resumes on demand</span></div>
+        <div class="legend-item"><span class="pill pill--limited">limited</span><span class="meaning">hit a usage limit; counting down to reset</span></div>
+        <div class="legend-item"><span class="pill pill--login">login</span><span class="meaning">needs you to sign in</span></div>
+        <div class="legend-item"><span class="pill pill--idle">idle</span><span class="meaning">quiet — nothing running</span></div>
+      </div>
+    </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
+        <div class="feature-kicker">Notifications</div>
+        <h2>The ones that need you come find you.</h2>
+        <p>The instant an agent wants your input or finishes, Maestro fires a native macOS notification — click it and you land on the exact tab. A live terminal popup mirrors the session so you can answer without hunting for it. Nothing slips through: a built-in notification center keeps the full history with one-click restore and mark-as-read, unread tabs light up in the sidebar, and ⌘U jumps to the next thing waiting on you. Choose exactly which states notify you in settings.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="notif">
+          <div class="notif-icon"><span class="logo-dots"><span></span><span></span><span></span></span></div>
+          <div class="notif-body">
+            <div class="notif-app">MAESTRO · now</div>
+            <div class="notif-title">refactor auth</div>
+            <div class="notif-text">Agent needs your answer · prompt</div>
+          </div>
+        </div>
+        <div class="notif" style="margin-top:10px;">
+          <div class="notif-icon"><span class="logo-dots"><span></span><span></span><span></span></span></div>
+          <div class="notif-body">
+            <div class="notif-app">MAESTRO · 1m ago</div>
+            <div class="notif-title">fix flaky ci test</div>
+            <div class="notif-text">Run finished · done ✓</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;color:var(--subtle);font-size:12px;">🔔 notification center keeps the history · ⌘U next unread</div>
       </div>
     </section>
 
@@ -103,14 +225,26 @@
         <p>Every session can have children: spawn a child agent for a subtask, a sibling for parallel work — <code>⌘T</code> and <code>⌥⌘T</code> from the keyboard, or <code>--child</code> and <code>--sibling</code> from the CLI. The explorer shows the whole lineage per project, and closing a parent can cascade through its finished subtree in one stroke. Agents structure their own work the same way: a session fans its subtasks out into child sessions and reports back up the tree.</p>
       </div>
       <div class="feature-visual">
-        <div class="mock-card"><span class="name">build auth feature</span><span class="pill pill--working">working 4:02</span></div>
-        <div class="mock-card mock-card--child" style="margin-top:8px;"><span class="name">write unit tests</span><span class="pill pill--working">working 1:12</span></div>
-        <div class="mock-card mock-card--grandchild" style="margin-top:8px;"><span class="name">fix fixtures</span><span class="pill pill--prompt">prompt 0:09</span></div>
-        <div class="mock-card mock-card--child" style="margin-top:8px;"><span class="name">api docs</span><span class="pill pill--review">review 0:41</span></div>
+        <div class="mock-card">
+          <div class="mock-card-main"><div class="name">build auth feature</div><div class="mock-sub">claude · master · working</div></div>
+          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">4:02</span></span><span class="mock-meta">opus 4.8 · 96k</span></div>
+        </div>
+        <div class="mock-card mock-card--child" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">write unit tests</div><div class="mock-sub">claude · master · working</div></div>
+          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">1:12</span></span><span class="mock-meta">sonnet 5 · 27k</span></div>
+        </div>
+        <div class="mock-card mock-card--grandchild" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">fix fixtures</div><div class="mock-sub" style="color:var(--prompt)">Overwrite snapshot?</div></div>
+          <div class="mock-card-side"><span class="pill pill--prompt"><span class="pill-status">prompt</span><span class="pill-time">0:09</span></span><span class="mock-meta">sonnet 5 · 9k</span></div>
+        </div>
+        <div class="mock-card mock-card--child" style="margin-top:8px;">
+          <div class="mock-card-main"><div class="name">api docs</div><div class="mock-sub" style="color:var(--review)">Ready for you to review</div></div>
+          <div class="mock-card-side"><span class="pill pill--review"><span class="pill-status">review</span><span class="pill-time">0:41</span></span><span class="mock-meta">gpt-5 · 33k</span></div>
+        </div>
       </div>
     </section>
 
-    <section class="feature container feature--flip">
+    <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">Orchestration</div>
         <h2>Type it. It's already running.</h2>
@@ -128,18 +262,18 @@
       </div>
     </section>
 
-    <section class="feature container">
+    <section class="feature container feature--flip">
       <div class="feature-text">
         <div class="feature-kicker">One control plane</div>
         <h2>The UI, the CLI, and the agents share one language.</h2>
-        <p>A single <code>maestro</code> binary over a unix socket. Everything the app can do, a script can do — and agents can too: they spawn siblings, fan out subtasks, and manage their own sessions.</p>
+        <p>A single <code>maestro</code> binary over a unix socket drives <strong>everything from the terminal</strong> — open, focus, move, split, stash, and close sessions, swap an agent's model, even read and change settings. No reaching for the mouse. Everything the app can do, a script can do — and the agents can too: they spawn siblings, fan out subtasks, and manage their own sessions.</p>
       </div>
       <div class="feature-visual">
         <pre class="code-block"><code>maestro list                        # every session as JSON
 maestro open --kind claude --child  # nest an agent under this one
 maestro send "api tests" "npm test"
-maestro send-key "api tests" enter
-maestro move "$MAESTRO_SESSION_ID" --new-window</code></pre>
+maestro swap "api tests" --to codex # switch the agent, keep the tab
+maestro settings set terminal.fontSize 14</code></pre>
         <p style="margin-bottom:0;"><a href="cli.html">Read the CLI docs →</a></p>
       </div>
     </section>
@@ -148,10 +282,10 @@ maestro move "$MAESTRO_SESSION_ID" --new-window</code></pre>
   <section class="download" id="download">
     <div class="container">
       <h2>Get Maestro</h2>
-      <p class="req">macOS on Apple Silicon · v0.1.0</p>
-      <pre class="code-block"><code>curl -fsSL https://coldstar96.github.io/maestro-releases/install.sh | sh</code></pre>
+      <p class="req">macOS on Apple Silicon · v0.2.3</p>
+      <pre class="code-block"><code>curl -fsSL https://maestroterminal.com/install.sh | sh</code></pre>
       <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download Maestro-arm64.dmg</a>
-      <p class="btn-note">Prefer the dmg? It's unsigned — macOS will block first launch; allow it under System Settings → Privacy & Security → Open Anyway. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>
+      <p class="btn-note">Signed &amp; notarized — launches straight from the dmg, no Gatekeeper prompt, and auto-updates itself after that. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>
     </div>
   </section>
 

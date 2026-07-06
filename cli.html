@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Maestro CLI — reference</title>
-  <meta name="description" content="Maestro CLI reference: list, open, focus, send, send-key, close, move, help — one binary, one socket.">
+  <meta name="description" content="Maestro CLI reference: list, open, focus, send, close, split, move, stash, swap, settings — one binary, one socket that drives the UI, your scripts, and the agents.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="assets/site.css">
   <script src="assets/analytics.js" async></script>
@@ -29,14 +29,29 @@
         <a href="#concepts">Concepts</a>
         <a href="#install">Get the CLI</a>
         <a href="#targeting">Targeting</a>
-        <div class="nav-group">Verbs</div>
+        <div class="nav-group">Sessions</div>
         <a href="#verb-list">list</a>
         <a href="#verb-open">open</a>
         <a href="#verb-focus">focus</a>
         <a href="#verb-send">send</a>
         <a href="#verb-send-key">send-key</a>
         <a href="#verb-close">close</a>
+        <div class="nav-group">Layout &amp; windows</div>
+        <a href="#verb-split">split</a>
         <a href="#verb-move">move</a>
+        <a href="#verb-move-project">move-project</a>
+        <a href="#verb-duplicate-window">duplicate-window</a>
+        <div class="nav-group">Lifecycle</div>
+        <a href="#verb-rename">rename</a>
+        <a href="#verb-reveal">reveal</a>
+        <a href="#verb-popup">popup</a>
+        <a href="#verb-reopen">reopen</a>
+        <a href="#verb-stash">stash / unstash</a>
+        <a href="#verb-unarchive">unarchive</a>
+        <div class="nav-group">Agents &amp; settings</div>
+        <a href="#verb-swap">swap</a>
+        <a href="#verb-settings">settings</a>
+        <a href="#verb-status-set">status-set</a>
         <a href="#verb-help">help</a>
         <div class="nav-group">More</div>
         <a href="#examples">Examples</a>
@@ -44,7 +59,7 @@
 
       <main class="docs-main">
         <h1>Maestro CLI</h1>
-        <p class="lead">One binary, one socket. <code>maestro</code> talks to the running app over its control socket — the same verbs drive the UI, your scripts, and the agents themselves.</p>
+        <p class="lead">One binary, one socket. <code>maestro</code> talks to the running app over its control socket — the same verbs drive the UI, your scripts, and the agents themselves. Everything you can click, an agent can run.</p>
 
         <h2 id="concepts">Concepts</h2>
         <p>Every maestro-managed terminal runs inside a <strong>session</strong> (a tab in the app). Sessions form a tree — a session can have child sessions — and windows hold session trees. The env var <code>$MAESTRO_SESSION_ID</code> holds the current session's id; "this session"/"this tab" means that id.</p>
@@ -56,16 +71,16 @@
         <h2 id="targeting">Targeting</h2>
         <p><code>&lt;target&gt;</code> is a session-id prefix (e.g. <code>3f2a</code>) or a unique title substring (case-insensitive). Run <code>maestro list</code> to see ids and titles; use <code>"$MAESTRO_SESSION_ID"</code> to target the current session.</p>
 
-        <h2 id="verbs">Verbs</h2>
+        <h2 id="verbs-sessions">Sessions</h2>
 
         <div class="verb" id="verb-list">
-          <h3>maestro list</h3>
-          <p>All sessions as JSON (id, title, kind, status, cwd, parentId, windowId).</p>
+          <h3>maestro list <span class="opt">[--closed]</span></h3>
+          <p>All sessions as JSON (<code>id, title, kind, status, cwd, parentId, windowId</code>). <code>--closed</code> lists recently-closed sessions (tombstones) instead, newest first.</p>
           <pre class="code-block"><code>maestro list | jq '.[] | {id, title, status}'</code></pre>
         </div>
 
         <div class="verb" id="verb-open">
-          <h3>maestro open --kind &lt;claude|codex|shell&gt; [--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;]</h3>
+          <h3>maestro open --kind &lt;claude|codex|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;]</span></h3>
           <p>Open a new session.</p>
           <ul class="flags">
             <li><code>--kind</code> claude, codex, or shell (default shell)</li>
@@ -78,9 +93,10 @@
         </div>
 
         <div class="verb" id="verb-focus">
-          <h3>maestro focus &lt;target&gt;</h3>
-          <p>Focus a session (bring its tab to front).</p>
-          <pre class="code-block"><code>maestro focus "api tests"</code></pre>
+          <h3>maestro focus &lt;target&gt; <span class="opt">| --back | --forward</span></h3>
+          <p>Focus a session (bring its tab to front), or move back/forward through this window's focus history.</p>
+          <pre class="code-block"><code>maestro focus "api tests"
+maestro focus --back</code></pre>
         </div>
 
         <div class="verb" id="verb-send">
@@ -96,20 +112,113 @@
         </div>
 
         <div class="verb" id="verb-close">
-          <h3>maestro close &lt;target&gt; [--force] [--cascade]</h3>
-          <p>Close a session. <code>--cascade</code> closes its whole subtree (children first); <code>--force</code> bypasses the busy/dirty guard.</p>
+          <h3>maestro close &lt;target&gt; <span class="opt">[--instant] [--discard] [--stash] [--force] [--cascade]</span></h3>
+          <p>Close a session and its subtree. <strong>Archives by default</strong> (closed history; restore via <code>unarchive</code>), respecting the close countdown unless <code>--instant</code>.</p>
+          <ul class="flags">
+            <li><code>--cascade</code> closes the whole subtree, children first</li>
+            <li><code>--instant</code> skips the close countdown</li>
+            <li><code>--discard</code> destroys to Recently-Closed instead of archiving</li>
+            <li><code>--stash</code> sends it to the visible Stash shelf</li>
+            <li><code>--force</code> bypasses the busy/dirty guard</li>
+          </ul>
           <pre class="code-block"><code>maestro close "$MAESTRO_SESSION_ID" --cascade --force</code></pre>
         </div>
 
+        <h2 id="verbs-layout">Layout &amp; windows</h2>
+
+        <div class="verb" id="verb-split">
+          <h3>maestro split &lt;target&gt; <span class="opt">[--down]</span></h3>
+          <p>Split a tab into panes (tmux-style): spawns a shell pane beside <code>&lt;target&gt;</code> (below with <code>--down</code>).</p>
+          <pre class="code-block"><code>maestro split "$MAESTRO_SESSION_ID" --down</code></pre>
+        </div>
+
         <div class="verb" id="verb-move">
-          <h3>maestro move &lt;target&gt; [up|down] [--before &lt;id&gt;] [--after &lt;id&gt;] [--child-of &lt;id&gt;] [--promote] [--to-window &lt;id&gt;] [--new-window]</h3>
-          <p>Reorder or re-parent a session, or move it to another/new window. <code>--promote</code> lifts it to root level.</p>
+          <h3>maestro move &lt;target&gt; <span class="opt">[up|down] [--before &lt;id&gt;] [--after &lt;id&gt;] [--child-of &lt;id&gt;] [--promote] [--to-window &lt;id&gt;] [--new-window] [--project &lt;dir&gt;]</span></h3>
+          <p>Reorder or re-parent a session, or move it to another/new window.</p>
+          <ul class="flags">
+            <li><code>--promote</code> lifts it to root level</li>
+            <li><code>--child-of &lt;id&gt;</code> re-parents under another session</li>
+            <li><code>--to-window &lt;id&gt;</code> / <code>--new-window</code> moves it across windows</li>
+            <li><code>--project &lt;dir&gt;</code> regroups it under a project (clears the manual pin)</li>
+          </ul>
           <pre class="code-block"><code>maestro move "$MAESTRO_SESSION_ID" --new-window</code></pre>
+        </div>
+
+        <div class="verb" id="verb-move-project">
+          <h3>maestro move-project &lt;dir&gt; <span class="opt">[up|down] [--before &lt;dir&gt;] [--after &lt;dir&gt;] [--first] [--last] [--window &lt;id&gt;]</span></h3>
+          <p>Reorder a project group in the sidebar (per window, custom sort). Dirs resolve to their project root; defaults to the focused window.</p>
+          <pre class="code-block"><code>maestro move-project ~/dev/api --first</code></pre>
+        </div>
+
+        <div class="verb" id="verb-duplicate-window">
+          <h3>maestro duplicate-window <span class="opt">[--window &lt;id&gt;]</span></h3>
+          <p>Open a new window viewing the same workspace (same sessions, independent focus). Defaults to the focused window.</p>
+          <pre class="code-block"><code>maestro duplicate-window</code></pre>
+        </div>
+
+        <h2 id="verbs-lifecycle">Lifecycle</h2>
+
+        <div class="verb" id="verb-rename">
+          <h3>maestro rename &lt;target&gt; "&lt;title&gt;" <span class="opt">| --clear</span></h3>
+          <p>Set a session's custom title. <code>--clear</code> (or an empty title) reverts to the auto-derived one.</p>
+          <pre class="code-block"><code>maestro rename "$MAESTRO_SESSION_ID" "api tests"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-reveal">
+          <h3>maestro reveal &lt;target&gt; &lt;finder|terminal|editor&gt;</h3>
+          <p>Open the session's cwd in Finder, a new Terminal, or your editor.</p>
+          <pre class="code-block"><code>maestro reveal "api tests" editor</code></pre>
+        </div>
+
+        <div class="verb" id="verb-popup">
+          <h3>maestro popup &lt;target&gt;</h3>
+          <p>Open a compact popup window showing a live duplicate of a session's terminal — the same window that auto-appears when a session needs input.</p>
+          <pre class="code-block"><code>maestro popup "refactor auth"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-reopen">
+          <h3>maestro reopen <span class="opt">[&lt;target&gt;]</span></h3>
+          <p>Reopen a closed session (see <code>list --closed</code>). <code>&lt;target&gt;</code> matches a closed session by id-prefix or title; omit it to reopen the most-recently-closed one.</p>
+          <pre class="code-block"><code>maestro reopen</code></pre>
+        </div>
+
+        <div class="verb" id="verb-stash">
+          <h3>maestro stash &lt;target&gt; &nbsp;·&nbsp; maestro unstash &lt;target&gt;</h3>
+          <p><code>stash</code> shelves a session and its subtree — same as archive, but it stays visible in the sidebar Stashed section. <code>unstash</code> restores it; agents resume lazily on focus.</p>
+          <pre class="code-block"><code>maestro stash "docs sweep"
+maestro unstash "docs sweep"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-unarchive">
+          <h3>maestro unarchive &lt;target&gt;</h3>
+          <p>Restore an archived session (and its subtree) to the sidebar; agents resume lazily on focus.</p>
+          <pre class="code-block"><code>maestro unarchive "refactor auth"</code></pre>
+        </div>
+
+        <h2 id="verbs-agents">Agents &amp; settings</h2>
+
+        <div class="verb" id="verb-swap">
+          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--force]</span></h3>
+          <p>Replace the agent running in a tab <strong>in place</strong> (same tab id/position). <code>--resume &lt;id&gt;</code> continues an existing claude/codex conversation; otherwise a fresh agent boots — <code>--to</code> picks the provider, <code>--model</code> the model, <code>--handoff &lt;file&gt;</code> seeds its first prompt. The outgoing conversation is tombstoned (<code>reopen</code> / ⌘Z restores it). <code>--force</code> bypasses the busy guard.</p>
+          <pre class="code-block"><code>maestro swap "api tests" --to codex --model gpt-5</code></pre>
+        </div>
+
+        <div class="verb" id="verb-settings">
+          <h3>maestro settings &lt;list [group] | get &lt;key&gt; | set &lt;key&gt; &lt;value&gt;&gt;</h3>
+          <p>Read or change maestro settings. <code>list</code> writes the full settings catalog (keys, labels, descriptions, current values) to a file and prints its path — read that file to find the right key, then <code>get</code>/<code>set</code> it.</p>
+          <pre class="code-block"><code>maestro settings list
+maestro settings set terminal.fontSize 14</code></pre>
+        </div>
+
+        <div class="verb" id="verb-status-set">
+          <h3>maestro status-set &lt;target&gt; &lt;status&gt; <span class="opt">[--reason &lt;text&gt;]</span></h3>
+          <p>Manually override a session's status (e.g. <code>working</code>, <code>waiting</code>, <code>idle</code>). Mostly for scripting and testing.</p>
+          <pre class="code-block"><code>maestro status-set "api tests" waiting --reason "needs review"</code></pre>
         </div>
 
         <div class="verb" id="verb-help">
           <h3>maestro help</h3>
-          <p>Print the built-in help.</p>
+          <p>Print the built-in help. Bare <code>maestro</code> with no verb launches (or focuses) the app.</p>
         </div>
 
         <h2 id="examples">Examples</h2>
@@ -124,6 +233,9 @@ maestro send "api tests" "npm test" && maestro send-key "api tests" enter
 
 # pop this session out into its own window
 maestro move "$MAESTRO_SESSION_ID" --new-window
+
+# swap this tab's agent for codex, keeping the tab in place
+maestro swap "$MAESTRO_SESSION_ID" --to codex
 
 # close this session and its whole subtree
 maestro close "$MAESTRO_SESSION_ID" --cascade --force</code></pre>
