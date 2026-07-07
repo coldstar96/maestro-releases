@@ -17,7 +17,6 @@
       <nav class="site-nav">
         <a href="index.html#features">Features</a>
         <a href="cli.html">CLI docs</a>
-        <a href="https://github.com/coldstar96/maestro-releases/releases">Releases</a>
         <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download</a>
       </nav>
     </div>
@@ -220,6 +219,24 @@
 
     <section class="feature container">
       <div class="feature-text">
+        <div class="feature-kicker">Orchestration</div>
+        <h2>Type it. It's already running.</h2>
+        <p>An always-on natural-language field sits at the bottom of every window. Each query dispatches a non-blocking orchestration run to a warm-pooled agent — the field is ready again the instant you hit Enter. Runs stream live status chips and report back when they finish.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-runbar">
+          <span>⌘ maestro ›</span>
+          <span>add rate limiting to the login route…</span>
+        </div>
+        <div class="mock-runbar" style="margin-top:12px;">
+          <span class="chip chip--live">run #7 · working 0m48</span>
+          <span class="chip">run #6 · done</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
         <div class="feature-kicker">Task structure</div>
         <h2>Big tasks become trees, not tab soup.</h2>
         <p>Every session can have children: spawn a child agent for a subtask, a sibling for parallel work — <code>⌘T</code> and <code>⌥⌘T</code> from the keyboard, or <code>--child</code> and <code>--sibling</code> from the CLI. The explorer shows the whole lineage per project, and closing a parent can cascade through its finished subtree in one stroke. Agents structure their own work the same way: a session fans its subtasks out into child sessions and reports back up the tree.</p>
@@ -246,24 +263,6 @@
 
     <section class="feature container">
       <div class="feature-text">
-        <div class="feature-kicker">Orchestration</div>
-        <h2>Type it. It's already running.</h2>
-        <p>An always-on natural-language field sits at the bottom of every window. Each query dispatches a non-blocking orchestration run to a warm-pooled agent — the field is ready again the instant you hit Enter. Runs stream live status chips and report back when they finish.</p>
-      </div>
-      <div class="feature-visual">
-        <div class="mock-runbar">
-          <span>⌘ maestro ›</span>
-          <span>add rate limiting to the login route…</span>
-        </div>
-        <div class="mock-runbar" style="margin-top:12px;">
-          <span class="chip chip--live">run #7 · working 0m48</span>
-          <span class="chip">run #6 · done</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="feature container feature--flip">
-      <div class="feature-text">
         <div class="feature-kicker">One control plane</div>
         <h2>The UI, the CLI, and the agents share one language.</h2>
         <p>A single <code>maestro</code> binary over a unix socket drives <strong>everything from the terminal</strong> — open, focus, move, split, stash, and close sessions, swap an agent's model, even read and change settings. No reaching for the mouse. Everything the app can do, a script can do — and the agents can too: they spawn siblings, fan out subtasks, and manage their own sessions.</p>
@@ -285,14 +284,13 @@ maestro settings set terminal.fontSize 14</code></pre>
       <p class="req">macOS on Apple Silicon · v0.2.5</p>
       <pre class="code-block"><code>curl -fsSL https://maestroterminal.com/install.sh | sh</code></pre>
       <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download Maestro-arm64.dmg</a>
-      <p class="btn-note">Signed &amp; notarized — launches straight from the dmg, no Gatekeeper prompt, and auto-updates itself after that. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>
+      <p class="btn-note">Signed &amp; notarized — launches straight from the dmg, no Gatekeeper prompt, and auto-updates itself after that.</p>
     </div>
   </section>
 
   <footer class="site-footer">
     <div class="container">
       <span>© 2026 coldstar96</span>
-      <a href="https://github.com/coldstar96/maestro-releases/releases">Releases</a>
       <a href="cli.html">CLI docs</a>
       <a href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download</a>
     </div>
