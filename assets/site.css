@@ -89,6 +89,9 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .mock-card--selected { border-color: var(--accent); background: #2d3644; }
 .mock-card--child { margin-left: 18px; }
 .mock-card--grandchild { margin-left: 36px; }
+.mock-card--stashed { opacity: 0.6; }
+.mock-card--unread .name { font-weight: 700; color: var(--text); }
+.mock-unread-dot { flex: none; width: 6px; height: 6px; margin-top: 6px; border-radius: 50%; background: var(--working); }
 .mock-card .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mock-card-main { flex: 1; min-width: 0; }
 .mock-sub { font-size: 11px; color: var(--subtle); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

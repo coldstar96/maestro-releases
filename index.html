@@ -6,7 +6,7 @@
   <title>Maestro — conduct a fleet of AI coding agents</title>
   <meta name="description" content="Maestro is a native macOS terminal multiplexer for orchestrating many AI coding agents in parallel — Claude Code, Codex, and ordinary shells.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/site.css?v=20260706">
+  <link rel="stylesheet" href="assets/site.css?v=20260707">
   <script src="assets/analytics.js" async></script>
   <script src="assets/copy.js" defer></script>
 </head>
@@ -25,7 +25,7 @@
   <section class="hero">
     <div class="container">
       <h1>Conduct a fleet of AI coding agents</h1>
-      <p class="pitch">Maestro is a native macOS terminal multiplexer built for parallelism: run many Claude Code and Codex sessions at once, see every agent's status at a glance, and dispatch new work in plain language — without ever blocking. Spend your time building, not managing terminals.</p>
+      <p class="pitch">Maestro is a terminal of engineers, by engineers, for engineers — a native macOS terminal multiplexer built because running a pile of Claude Code and Codex sessions in parallel meant losing track of half of them. You see every agent's status at a glance and dispatch new work in plain language, without ever getting blocked waiting on one. Spend your time building, not managing terminals.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download for macOS</a>
         <a class="btn btn-ghost" href="cli.html">CLI docs</a>
@@ -56,20 +56,30 @@
                 <div class="mock-card-main"><div class="name">refactor auth</div><div class="mock-sub" style="color:var(--waiting)">waiting on npm install</div></div>
                 <div class="mock-card-side"><span class="pill pill--waiting"><span class="pill-status">waiting</span><span class="pill-time">0:32</span></span><span class="mock-meta">opus 4.8 · 54k</span></div>
               </div>
-              <div class="mock-project">website</div>
               <div class="mock-card">
-                <div class="mock-card-main"><div class="name">docs sweep</div><div class="mock-sub">codex · main · idle</div></div>
-                <div class="mock-card-side"><span class="pill pill--idle"><span class="pill-status">idle</span><span class="pill-time">15:40</span></span><span class="mock-meta">gpt-5 · 12k</span></div>
+                <div class="mock-card-main"><div class="name">add rate limit headers</div><div class="mock-sub" style="color:var(--prompt)">needs input: overwrite config?</div></div>
+                <div class="mock-card-side"><span class="pill pill--prompt"><span class="pill-status">prompt</span><span class="pill-time">4:51</span></span><span class="mock-meta">opus 4.8 · 67k</span></div>
+              </div>
+              <div class="mock-project">website</div>
+              <div class="mock-card mock-card--unread">
+                <span class="mock-unread-dot"></span>
+                <div class="mock-card-main"><div class="name">docs sweep</div><div class="mock-sub">codex · main · done</div></div>
+                <div class="mock-card-side"><span class="pill pill--done"><span class="pill-status">done</span><span class="pill-time">15:40</span></span><span class="mock-meta">gpt-5 · 12k</span></div>
+              </div>
+              <div class="mock-project">Stashed</div>
+              <div class="mock-card mock-card--stashed">
+                <div class="mock-card-main"><div class="name">experiment: ws reconnect</div><div class="mock-sub">claude · feature/ws · stashed 2d ago</div></div>
               </div>
             </aside>
             <div class="mock-term">
               <div><span class="dim">~/dev/api on master</span></div>
               <div><span class="blue">❯</span> claude "make the retry test deterministic"</div>
               <div><span class="dim">● Reading test/retry.spec.ts</span></div>
-              <div><span class="dim">● Patching backoff to injectable clock</span></div>
-              <div><span class="dim">● Running tests…</span></div>
-              <div><span class="ok">✓ 214 passed</span> <span class="dim">in 3.9s</span></div>
-              <div><span class="dim">Committed 3f2a9c1 · opening PR #482</span></div>
+              <div><span class="dim">● Editing src/retry/backoff.ts</span></div>
+              <div><span class="dim">● Editing test/retry.spec.ts</span></div>
+              <div><span class="dim">● Running bash -c "npm test -- retry"</span></div>
+              <div><span class="ok">PASS</span> <span class="dim">test/retry.spec.ts · 12 passed</span></div>
+              <div><span class="blue">●</span> <span class="dim">Editing src/retry/backoff.ts…</span></div>
             </div>
             <div class="mock-runbar"><span>⌘ maestro ›</span><span>fix the flaky test in ci and open a PR…</span><span class="chip chip--live">run #3 · working</span><span class="chip">run #2 · done</span></div>
           </div>
