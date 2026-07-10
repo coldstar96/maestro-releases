@@ -138,15 +138,21 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .feature p { color: var(--muted); }
 .feature-visual { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: var(--mono); font-size: 13px; }
 
-/* status legend */
-.status-legend { padding: 64px 0; border-top: 1px solid var(--border); text-align: center; }
-.status-legend .feature-kicker { margin-bottom: 8px; }
-.legend-head { font-size: 28px; margin-bottom: 8px; }
-.legend-sub { color: var(--muted); margin: 0 auto 28px; max-width: 560px; }
-.legend-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 40px; max-width: 780px; margin: 0 auto; text-align: left; }
-.legend-item { display: flex; align-items: center; gap: 14px; padding: 11px 2px; border-bottom: 1px solid var(--border); }
-.legend-item .pill { margin-left: 0; min-width: 96px; text-align: center; }
-.legend-item .meaning { color: var(--muted); font-size: 14px; }
+/* status legend strip */
+.legend-strip { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: -18px; padding-top: 22px; border-top: 1px solid var(--border); }
+.legend-chip { display: inline-flex; align-items: center; gap: 8px; }
+.legend-chip .pill { margin-left: 0; }
+.legend-chip .meaning { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+
+/* account rows */
+.acct-head { font-size: 11px; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.mock-account { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 13px; }
+.acct-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.acct-name { font-weight: 600; color: var(--text); }
+.acct-plan { flex: 1; color: var(--subtle); font-size: 11px; }
+.acct-meter { flex: none; width: 110px; height: 5px; border-radius: 3px; background: #38383b; overflow: hidden; }
+.acct-meter span { display: block; height: 100%; border-radius: 3px; }
+.acct-pct { flex: none; width: 34px; text-align: right; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* notification mock */
 .notif { display: flex; gap: 12px; align-items: center; font-family: var(--sans); background: var(--card); border: 1px solid var(--border-strong); border-radius: 12px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
@@ -192,7 +198,7 @@ pre.code-block code { background: none; border: none; padding: 0; font-size: inh
   .mock-body { grid-template-columns: 1fr; }
   .mock-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
   .hook-grid { grid-template-columns: 1fr; }
-  .legend-grid { grid-template-columns: 1fr; max-width: 420px; }
+  .legend-strip { margin-top: 0; }
   .feature { grid-template-columns: 1fr; gap: 28px; padding: 48px 0; }
   .feature--flip .feature-text { order: 0; }
   .docs-layout { grid-template-columns: 1fr; }

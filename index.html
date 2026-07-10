@@ -6,7 +6,7 @@
   <title>Maestro — conduct a fleet of AI coding agents</title>
   <meta name="description" content="Maestro is a native macOS terminal multiplexer for orchestrating many AI coding agents in parallel — Claude Code, Codex, and ordinary shells.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/site.css?v=20260707">
+  <link rel="stylesheet" href="assets/site.css?v=20260710">
   <script src="assets/analytics.js" async></script>
   <script src="assets/copy.js" defer></script>
 </head>
@@ -159,7 +159,7 @@
       <div class="feature-text">
         <div class="feature-kicker">Situational awareness</div>
         <h2>Every agent, one glance.</h2>
-        <p>Projects group sessions into a lineage tree of status cards — working, waiting, background — each with a live timer. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. A notification center keeps the history. Tabs show the model and context size at a glance.</p>
+        <p>Projects group sessions into a lineage tree of status cards, each with a live timer — and every state has a color, so one glance at a card's pill tells you exactly what an agent is doing and whether it needs you. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. Tabs show the model and context size at a glance.</p>
       </div>
       <div class="feature-visual">
         <div class="mock-card mock-card--selected">
@@ -179,29 +179,58 @@
           <div class="mock-card-side"><span class="pill pill--waiting"><span class="pill-status">waiting</span><span class="pill-time">0:32</span></span><span class="mock-meta">gpt-5 · 18k</span></div>
         </div>
       </div>
-    </section>
-
-    <section class="status-legend">
-    <div class="container">
-      <div class="feature-kicker">The vocabulary</div>
-      <h2 class="legend-head">Every state has a color.</h2>
-      <p class="legend-sub">One glance at a card's pill tells you exactly what an agent is doing — and whether it needs you.</p>
-      <div class="legend-grid">
-        <div class="legend-item"><span class="pill pill--working">working</span><span class="meaning">actively building</span></div>
-        <div class="legend-item"><span class="pill pill--background">background</span><span class="meaning">running a background task</span></div>
-        <div class="legend-item"><span class="pill pill--prompt">prompt</span><span class="meaning">needs your answer to continue</span></div>
-        <div class="legend-item"><span class="pill pill--review">review</span><span class="meaning">work is ready for you to check</span></div>
-        <div class="legend-item"><span class="pill pill--waiting">waiting</span><span class="meaning">blocked, waiting to continue</span></div>
-        <div class="legend-item"><span class="pill pill--done">done</span><span class="meaning">finished its turn</span></div>
-        <div class="legend-item"><span class="pill pill--paused">paused</span><span class="meaning">interrupted — resumes on demand</span></div>
-        <div class="legend-item"><span class="pill pill--limited">limited</span><span class="meaning">hit a usage limit; counting down to reset</span></div>
-        <div class="legend-item"><span class="pill pill--login">login</span><span class="meaning">needs you to sign in</span></div>
-        <div class="legend-item"><span class="pill pill--idle">idle</span><span class="meaning">quiet — nothing running</span></div>
+      <div class="legend-strip">
+        <div class="legend-chip"><span class="pill pill--working">working</span><span class="meaning">actively building</span></div>
+        <div class="legend-chip"><span class="pill pill--background">background</span><span class="meaning">running a background task</span></div>
+        <div class="legend-chip"><span class="pill pill--prompt">prompt</span><span class="meaning">needs your answer</span></div>
+        <div class="legend-chip"><span class="pill pill--review">review</span><span class="meaning">ready for you to check</span></div>
+        <div class="legend-chip"><span class="pill pill--waiting">waiting</span><span class="meaning">blocked, waiting to continue</span></div>
+        <div class="legend-chip"><span class="pill pill--done">done</span><span class="meaning">finished its turn</span></div>
+        <div class="legend-chip"><span class="pill pill--paused">paused</span><span class="meaning">interrupted — resumes on demand</span></div>
+        <div class="legend-chip"><span class="pill pill--limited">limited</span><span class="meaning">usage limit; counting down</span></div>
+        <div class="legend-chip"><span class="pill pill--login">login</span><span class="meaning">needs you to sign in</span></div>
+        <div class="legend-chip"><span class="pill pill--idle">idle</span><span class="meaning">quiet — nothing running</span></div>
       </div>
-    </div>
     </section>
 
     <section class="feature container feature--flip">
+      <div class="feature-text">
+        <div class="feature-kicker">Multi-account</div>
+        <h2>All your Claude accounts, one fleet.</h2>
+        <p>Sign in to every Claude account you have — work, personal, the spare Max plan — each with isolated credentials and a live usage meter. New sessions pick an account by strategy: spread work evenly, grab the most headroom, rotate, or always ask. When an account hits its usage limit mid-run, the session fails over to a fresh one and keeps going — and you can swap any session's account mid-conversation from the card, the context menu, or <code>maestro swap --account</code>. Even a <code>claude</code> you hand-type into a shell binds to an account automatically.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="acct-head">accounts · 5-hour window</div>
+        <div class="mock-account">
+          <span class="acct-dot" style="background:var(--working)"></span>
+          <span class="acct-name">work</span>
+          <span class="acct-plan">max 20×</span>
+          <div class="acct-meter"><span style="width:91%;background:var(--limited)"></span></div>
+          <span class="acct-pct">91%</span>
+        </div>
+        <div class="mock-account" style="margin-top:8px;">
+          <span class="acct-dot" style="background:var(--review)"></span>
+          <span class="acct-name">personal</span>
+          <span class="acct-plan">max 5×</span>
+          <div class="acct-meter"><span style="width:34%;background:var(--working)"></span></div>
+          <span class="acct-pct">34%</span>
+        </div>
+        <div class="mock-account" style="margin-top:8px;">
+          <span class="acct-dot" style="background:var(--idle)"></span>
+          <span class="acct-name">team</span>
+          <span class="acct-plan">pro</span>
+          <div class="acct-meter"><span style="width:12%;background:var(--working)"></span></div>
+          <span class="acct-pct">12%</span>
+        </div>
+        <div class="mock-card" style="margin-top:14px;">
+          <div class="mock-card-main"><div class="name">refactor auth</div><div class="mock-sub">claude · master · working</div></div>
+          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">1:38</span></span><span class="mock-meta"><span style="color:var(--review)">●</span> personal · opus 4.8 · 61k · 34%</span></div>
+        </div>
+        <div style="margin-top:14px;color:var(--subtle);font-size:12px;">⇄ swap accounts mid-session · auto-failover when one hits its limit</div>
+      </div>
+    </section>
+
+    <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">Notifications</div>
         <h2>The ones that need you come find you.</h2>
@@ -228,7 +257,7 @@
       </div>
     </section>
 
-    <section class="feature container">
+    <section class="feature container feature--flip">
       <div class="feature-text">
         <div class="feature-kicker">Orchestration</div>
         <h2>Say it in plain English. It just happens.</h2>
@@ -246,7 +275,7 @@
       </div>
     </section>
 
-    <section class="feature container feature--flip">
+    <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">Task structure</div>
         <h2>Big tasks become trees, not tab soup.</h2>
@@ -272,7 +301,7 @@
       </div>
     </section>
 
-    <section class="feature container">
+    <section class="feature container feature--flip">
       <div class="feature-text">
         <div class="feature-kicker">One control plane</div>
         <h2>The UI, the CLI, and the agents share one language.</h2>
@@ -292,7 +321,7 @@ maestro settings set terminal.fontSize 14</code></pre>
   <section class="download" id="download">
     <div class="container">
       <h2>Get Maestro</h2>
-      <p class="req">macOS on Apple Silicon · v0.2.5</p>
+      <p class="req">macOS on Apple Silicon · v0.2.9</p>
       <pre class="code-block"><code>curl -fsSL https://maestroterminal.com/install.sh | sh</code></pre>
       <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download Maestro-arm64.dmg</a>
       <p class="btn-note">Signed &amp; notarized — launches straight from the dmg, no Gatekeeper prompt, and auto-updates itself after that. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>
