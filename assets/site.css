@@ -110,6 +110,10 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .pill--paused { background: #ec407a; }
 .pill--limited { background: #ef5350; }
 .pill--login { background: #ff9800; }
+.pill--compacting { background: #42a5f5; }
+.pill--error { background: #ff1744; }
+.pill--shell { background: #5a8; }
+.pill--exited { background: #a55; }
 .mock-term { padding: 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: #cccccc; background: var(--surface); overflow: hidden; }
 .mock-term .dim { color: var(--subtle); }
 .mock-term .ok { color: var(--idle); }

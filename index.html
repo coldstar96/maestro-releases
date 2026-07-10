@@ -6,7 +6,7 @@
   <title>Maestro — conduct a fleet of AI coding agents</title>
   <meta name="description" content="Maestro is a native macOS terminal multiplexer for orchestrating many AI coding agents in parallel — Claude Code, Codex, and ordinary shells.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/site.css?v=20260710">
+  <link rel="stylesheet" href="assets/site.css?v=20260710b">
   <script src="assets/analytics.js" async></script>
   <script src="assets/copy.js" defer></script>
 </head>
@@ -182,14 +182,18 @@
       <div class="legend-strip">
         <div class="legend-chip"><span class="pill pill--working">working</span><span class="meaning">actively building</span></div>
         <div class="legend-chip"><span class="pill pill--background">background</span><span class="meaning">running a background task</span></div>
+        <div class="legend-chip"><span class="pill pill--compacting">compacting</span><span class="meaning">condensing its context</span></div>
         <div class="legend-chip"><span class="pill pill--prompt">prompt</span><span class="meaning">needs your answer</span></div>
         <div class="legend-chip"><span class="pill pill--review">review</span><span class="meaning">ready for you to check</span></div>
         <div class="legend-chip"><span class="pill pill--waiting">waiting</span><span class="meaning">blocked, waiting to continue</span></div>
         <div class="legend-chip"><span class="pill pill--done">done</span><span class="meaning">finished its turn</span></div>
         <div class="legend-chip"><span class="pill pill--paused">paused</span><span class="meaning">interrupted — resumes on demand</span></div>
         <div class="legend-chip"><span class="pill pill--limited">limited</span><span class="meaning">usage limit; counting down</span></div>
+        <div class="legend-chip"><span class="pill pill--error">error</span><span class="meaning">the run failed — take a look</span></div>
         <div class="legend-chip"><span class="pill pill--login">login</span><span class="meaning">needs you to sign in</span></div>
         <div class="legend-chip"><span class="pill pill--idle">idle</span><span class="meaning">quiet — nothing running</span></div>
+        <div class="legend-chip"><span class="pill pill--shell">shell</span><span class="meaning">a plain shell, no agent</span></div>
+        <div class="legend-chip"><span class="pill pill--exited">exited</span><span class="meaning">the process ended</span></div>
       </div>
     </section>
 
