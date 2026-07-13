@@ -76,7 +76,8 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .hero .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
 /* app mockup */
-.mockup { margin: 56px auto 0; max-width: 920px; }
+.mockup { margin: 56px auto 0; max-width: 1040px; }
+.hero-shot { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.55); }
 .mock-window { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.55); text-align: left; }
 .mock-titlebar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--card); border-bottom: 1px solid var(--border); }
 .mock-dot { width: 12px; height: 12px; border-radius: 50%; }
