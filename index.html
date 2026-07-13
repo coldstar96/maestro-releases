@@ -6,7 +6,7 @@
   <title>Maestro — conduct a fleet of AI coding agents</title>
   <meta name="description" content="Maestro is a native macOS terminal multiplexer for orchestrating many AI coding agents in parallel — Claude Code, Codex, and ordinary shells.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/site.css?v=20260713">
+  <link rel="stylesheet" href="assets/site.css?v=20260713b">
   <script src="assets/analytics.js" async></script>
   <script src="assets/copy.js" defer></script>
 </head>
@@ -155,32 +155,7 @@
         <p>Sign in to every Claude account you have — work, personal, the spare Max plan — each with isolated credentials and a live usage meter. New sessions pick an account by strategy: spread work evenly, grab the most headroom, rotate, or always ask. When an account hits its usage limit mid-run, the session fails over to a fresh one and keeps going — and you can swap any session's account mid-conversation from the card, the context menu, or <code>maestro swap --account</code>. Even a <code>claude</code> you hand-type into a shell binds to an account automatically.</p>
       </div>
       <div class="feature-visual">
-        <div class="acct-head">accounts · 5-hour window</div>
-        <div class="mock-account">
-          <span class="acct-dot" style="background:var(--working)"></span>
-          <span class="acct-name">work</span>
-          <span class="acct-plan">max 20×</span>
-          <div class="acct-meter"><span style="width:91%;background:var(--limited)"></span></div>
-          <span class="acct-pct">91%</span>
-        </div>
-        <div class="mock-account" style="margin-top:8px;">
-          <span class="acct-dot" style="background:var(--review)"></span>
-          <span class="acct-name">personal</span>
-          <span class="acct-plan">max 5×</span>
-          <div class="acct-meter"><span style="width:34%;background:var(--working)"></span></div>
-          <span class="acct-pct">34%</span>
-        </div>
-        <div class="mock-account" style="margin-top:8px;">
-          <span class="acct-dot" style="background:var(--idle)"></span>
-          <span class="acct-name">team</span>
-          <span class="acct-plan">pro</span>
-          <div class="acct-meter"><span style="width:12%;background:var(--working)"></span></div>
-          <span class="acct-pct">12%</span>
-        </div>
-        <div class="mock-card" style="margin-top:14px;">
-          <div class="mock-card-main"><div class="name">refactor auth</div><div class="mock-sub">claude · master · working</div></div>
-          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">1:38</span></span><span class="mock-meta"><span style="color:var(--review)">●</span> personal · opus 4.8 · 61k · 34%</span></div>
-        </div>
+        <img class="feature-shot" src="assets/accounts.png?v=20260713" width="1412" height="870" alt="Maestro's Accounts panel: two Claude and two Codex accounts, each with its own credentials, plan, and live 5-hour and 7-day usage meters, plus a session-assignment strategy and auto-failover toggle." loading="lazy">
         <div style="margin-top:14px;color:var(--subtle);font-size:12px;">⇄ swap accounts mid-session · auto-failover when one hits its limit</div>
       </div>
     </section>
