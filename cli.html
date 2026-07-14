@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Maestro CLI — reference</title>
-  <meta name="description" content="Maestro CLI reference: list, open, focus, send, archive, split, move, stash, swap, settings — one binary, one socket that drives the UI, your scripts, and the agents.">
+  <meta name="description" content="Maestro CLI reference: list, open, focus, send, wait, compact, swap, accounts, settings — one binary, one socket that drives the UI, your scripts, and the agents.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="assets/site.css?v=20260706">
   <script src="assets/analytics.js" async></script>
@@ -37,8 +37,14 @@
         <a href="#verb-send-key">send-key</a>
         <a href="#verb-archive">archive</a>
         <a href="#verb-delete">delete</a>
+        <div class="nav-group">Orchestration</div>
+        <a href="#verb-id">id</a>
+        <a href="#verb-wait">wait</a>
+        <a href="#verb-compact">compact</a>
+        <a href="#verb-status-set">status-set</a>
         <div class="nav-group">Layout &amp; windows</div>
         <a href="#verb-split">split</a>
+        <a href="#verb-panel">panel</a>
         <a href="#verb-move">move</a>
         <a href="#verb-move-project">move-project</a>
         <a href="#verb-duplicate-window">duplicate-window</a>
@@ -49,12 +55,18 @@
         <a href="#verb-reopen">reopen</a>
         <a href="#verb-stash">stash / unstash</a>
         <a href="#verb-unarchive">unarchive</a>
-        <div class="nav-group">Agents &amp; settings</div>
+        <div class="nav-group">Agents &amp; accounts</div>
         <a href="#verb-swap">swap</a>
-        <a href="#verb-id">id</a>
+        <a href="#verb-accounts">accounts</a>
+        <div class="nav-group">Config &amp; lookup</div>
         <a href="#verb-settings">settings</a>
-        <a href="#verb-status-set">status-set</a>
-        <a href="#verb-help">help</a>
+        <a href="#verb-commands">commands</a>
+        <a href="#verb-keybind">keybind</a>
+        <a href="#verb-docs">docs</a>
+        <a href="#verb-help">help / launch</a>
+        <div class="nav-group">Maintenance</div>
+        <a href="#verb-report">report / bug-report</a>
+        <a href="#verb-reap">reap</a>
         <div class="nav-group">More</div>
         <a href="#examples">Examples</a>
       </nav>
@@ -71,47 +83,54 @@
         <pre class="code-block"><code>ln -sf /Applications/Maestro.app/Contents/Resources/bin/maestro /usr/local/bin/maestro</code></pre>
 
         <h2 id="targeting">Targeting</h2>
-        <p><code>&lt;target&gt;</code> is a session-id prefix (e.g. <code>3f2a</code>) or a unique title substring (case-insensitive). Run <code>maestro list</code> to see ids and titles; use <code>"$MAESTRO_SESSION_ID"</code> to target the current session.</p>
+        <p><code>&lt;target&gt;</code> accepts a session-id prefix (e.g. <code>3f2a</code>) or a unique title substring — but <strong>the id is the only stable key</strong>. Titles change as an agent works, so a title match that resolves today can resolve to the wrong tab (or nothing) a minute later. Except for a one-shot command you type by hand, resolve a title to its id <strong>once</strong> with <code>maestro id</code> and target by that id from then on:</p>
+        <pre class="code-block"><code>SID=$(maestro id "api tests")   # resolve once
+maestro send "$SID" "npm test"  # target by id thereafter
+maestro wait "$SID" --until idle</code></pre>
+        <p><code>maestro open</code> prints the new session's id — capture that rather than guessing a title. Use <code>"$MAESTRO_SESSION_ID"</code> for the current session, and <code>maestro list</code> to see every id and title. The examples below all target by id for that reason.</p>
 
         <h2 id="verbs-sessions">Sessions</h2>
 
         <div class="verb" id="verb-list">
-          <h3>maestro list <span class="opt">[--closed]</span></h3>
-          <p>All sessions as JSON (<code>id, title, kind, status, cwd, parentId, windowId</code>). <code>--closed</code> lists recently-closed sessions (tombstones) instead, newest first.</p>
+          <h3>maestro list <span class="opt">[--archived | --closed]</span></h3>
+          <p>Live sessions as JSON (<code>id, title, kind, status, cwd, parentId, windowId</code>). <code>--archived</code> lists archived (shelved) sessions instead; <code>--closed</code> lists recently-closed sessions (tombstones) instead, newest first.</p>
           <pre class="code-block"><code>maestro list | jq '.[] | {id, title, status}'</code></pre>
         </div>
 
         <div class="verb" id="verb-open">
-          <h3>maestro open --kind &lt;claude|codex|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;] [--prompt "&lt;task&gt;"]</span></h3>
-          <p>Open a new session.</p>
+          <h3>maestro open --kind &lt;claude|codex|opencode|aider|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;] [--prompt "&lt;task&gt;"] [--model &lt;id|@user&gt;] [--permission-mode &lt;mode|@user&gt;]</span></h3>
+          <p>Open a new session and print its id. By default it inherits the cwd of the tab the command ran in — pass <code>--cwd</code> to override, or run from outside maestro to start in your home directory.</p>
           <ul class="flags">
-            <li><code>--kind</code> claude, codex, or shell (default shell)</li>
+            <li><code>--kind</code> claude, codex, opencode, aider, or shell (default shell)</li>
             <li><code>--child</code> / <code>--sibling</code> place relative to the FOCUSED session (parent and cwd resolved server-side)</li>
             <li><code>--parent &lt;id&gt;</code> nests under a specific session</li>
             <li><code>--cwd &lt;dir&gt;</code> working directory</li>
             <li><code>--title &lt;t&gt;</code> tab title</li>
-            <li><code>--prompt "&lt;task&gt;"</code> seeds an agent (claude/codex) with its first task at spawn — one command, no follow-up <code>send</code></li>
+            <li><code>--prompt "&lt;task&gt;"</code> seeds an agent (claude/codex/opencode) with its first task at spawn — one command, no follow-up <code>send</code>. Not supported for aider.</li>
+            <li><code>--model &lt;id|@user&gt;</code> agent model for this session — an id, <code>@user</code> to match your own CLI default, or <code>""</code> for the agent's native default</li>
+            <li><code>--permission-mode &lt;mode|@user&gt;</code> claude interaction mode: <code>default</code>, <code>acceptEdits</code>, <code>plan</code>, <code>bypassPermissions</code>, or <code>@user</code></li>
           </ul>
-          <pre class="code-block"><code>maestro open --kind claude --child --prompt "run the api tests and fix failures"</code></pre>
+          <pre class="code-block"><code>SID=$(maestro open --kind claude --child --prompt "run the api tests and fix failures")</code></pre>
         </div>
 
         <div class="verb" id="verb-focus">
           <h3>maestro focus &lt;target&gt; <span class="opt">| --back | --forward</span></h3>
           <p>Focus a session (bring its tab to front), or move back/forward through this window's focus history.</p>
-          <pre class="code-block"><code>maestro focus "api tests"
+          <pre class="code-block"><code>maestro focus "$SID"
 maestro focus --back</code></pre>
         </div>
 
         <div class="verb" id="verb-send">
-          <h3>maestro send &lt;target&gt; "&lt;text&gt;" <span class="opt">[--enter]</span></h3>
-          <p>Type text into a session's terminal. <code>--enter</code> presses Enter after typing (type-and-submit in one call); without it, no Enter is sent.</p>
-          <pre class="code-block"><code>maestro send "api tests" "npm test" --enter</code></pre>
+          <h3>maestro send &lt;target&gt; "&lt;text&gt;" <span class="opt">[--no-enter]</span></h3>
+          <p>Type text into a session's terminal <strong>and press Enter to submit it</strong> — one call. Pass <code>--no-enter</code> to type without submitting, for staging input that the user (or a later key) will complete.</p>
+          <pre class="code-block"><code>maestro send "$SID" "npm test"
+maestro send "$SID" "npm test" --no-enter   # stage it, don't run it</code></pre>
         </div>
 
         <div class="verb" id="verb-send-key">
           <h3>maestro send-key &lt;target&gt; &lt;enter|escape|ctrl-c|tab&gt;</h3>
           <p>Send a key press to a session.</p>
-          <pre class="code-block"><code>maestro send-key "api tests" ctrl-c</code></pre>
+          <pre class="code-block"><code>maestro send-key "$SID" ctrl-c</code></pre>
         </div>
 
         <div class="verb" id="verb-archive">
@@ -129,7 +148,34 @@ maestro focus --back</code></pre>
         <div class="verb" id="verb-delete">
           <h3>maestro delete &lt;target&gt; <span class="opt">[--force]</span></h3>
           <p>Permanently delete a session and its subtree (stops it if running). Recoverable from Recently-Closed (<code>⌘P #</code>) unless recovery is off. <code>--force</code> bypasses the busy/dirty guard.</p>
-          <pre class="code-block"><code>maestro delete "old spike" --force</code></pre>
+          <pre class="code-block"><code>maestro delete "$SID" --force</code></pre>
+        </div>
+
+        <h2 id="verbs-orchestration">Orchestration</h2>
+
+        <div class="verb" id="verb-id">
+          <h3>maestro id &lt;target&gt;</h3>
+          <p>Print a session's full stable id (uuid). Titles change as an agent works and aren't a stable key — resolve a title/prefix to its id <strong>once</strong>, then target later commands by that id.</p>
+          <pre class="code-block"><code>SID=$(maestro id "api tests")
+maestro focus "$SID"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-wait">
+          <h3>maestro wait &lt;target&gt; --until &lt;status&gt; <span class="opt">| --until-not &lt;status&gt; [--timeout &lt;s&gt;]</span></h3>
+          <p>Block until a session's status matches (<code>--until</code>) or stops matching (<code>--until-not</code>) a status — <code>working</code>, <code>idle</code>, <code>waiting</code>, <code>compacting</code> — then return JSON <code>{matched, timedOut, finalStatus, waitedMs}</code>. If the session is removed, archived, or exits while waiting, it returns immediately with <code>{matched:false, gone:true}</code> rather than hanging. <code>--timeout</code> is in seconds; <code>0</code> waits forever; the default is 300s.</p>
+          <pre class="code-block"><code>maestro wait "$SID" --until idle --timeout 120</code></pre>
+        </div>
+
+        <div class="verb" id="verb-compact">
+          <h3>maestro compact &lt;target&gt; <span class="opt">[--then-send "&lt;text&gt;"]</span></h3>
+          <p>Submit <code>/compact</code> to a session, wait (event-driven) for the compaction to finish, then optionally submit a follow-up — one deterministic call instead of sending <code>/compact</code> and polling for it to settle. Returns JSON <code>{compacted, timedOut, sentFollowup, finalStatus, waitedMs}</code>. When the target is the calling session itself, the sequence runs detached and the call returns <code>{detached:true, target, willSend}</code> immediately, since a session can't wait on its own turn ending.</p>
+          <pre class="code-block"><code>maestro compact "$MAESTRO_SESSION_ID" --then-send "continue where you left off"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-status-set">
+          <h3>maestro status-set &lt;target&gt; &lt;status&gt; <span class="opt">[--reason &lt;text&gt;]</span></h3>
+          <p>Manually override a session's status (e.g. <code>working</code>, <code>waiting</code>, <code>idle</code>). Mostly for scripting and testing.</p>
+          <pre class="code-block"><code>maestro status-set "$SID" waiting --reason "needs review"</code></pre>
         </div>
 
         <h2 id="verbs-layout">Layout &amp; windows</h2>
@@ -138,6 +184,12 @@ maestro focus --back</code></pre>
           <h3>maestro split &lt;target&gt; <span class="opt">[--down]</span></h3>
           <p>Split a tab into panes (tmux-style): spawns a shell pane beside <code>&lt;target&gt;</code> (below with <code>--down</code>).</p>
           <pre class="code-block"><code>maestro split "$MAESTRO_SESSION_ID" --down</code></pre>
+        </div>
+
+        <div class="verb" id="verb-panel">
+          <h3>maestro panel &lt;target&gt; <span class="opt">[--url &lt;url&gt;] [--off]</span></h3>
+          <p>Open the side panel showing a live web preview for the session — the dev-server URL is auto-detected, or set one with <code>--url</code>. <code>--off</code> hides it.</p>
+          <pre class="code-block"><code>maestro panel "$SID" --url http://localhost:5173</code></pre>
         </div>
 
         <div class="verb" id="verb-move">
@@ -175,13 +227,13 @@ maestro focus --back</code></pre>
         <div class="verb" id="verb-reveal">
           <h3>maestro reveal &lt;target&gt; &lt;finder|terminal|editor&gt;</h3>
           <p>Open the session's cwd in Finder, a new Terminal, or your editor.</p>
-          <pre class="code-block"><code>maestro reveal "api tests" editor</code></pre>
+          <pre class="code-block"><code>maestro reveal "$SID" editor</code></pre>
         </div>
 
         <div class="verb" id="verb-popup">
           <h3>maestro popup &lt;target&gt;</h3>
           <p>Open a compact popup window showing a live duplicate of a session's terminal — the same window that auto-appears when a session needs input.</p>
-          <pre class="code-block"><code>maestro popup "refactor auth"</code></pre>
+          <pre class="code-block"><code>maestro popup "$SID"</code></pre>
         </div>
 
         <div class="verb" id="verb-reopen">
@@ -193,63 +245,118 @@ maestro focus --back</code></pre>
         <div class="verb" id="verb-stash">
           <h3>maestro stash &lt;target&gt; &nbsp;·&nbsp; maestro unstash &lt;target&gt;</h3>
           <p><code>stash</code> shelves a session and its subtree — same as archive, but it stays visible in the sidebar Stashed section. <code>unstash</code> restores it; agents resume lazily on focus.</p>
-          <pre class="code-block"><code>maestro stash "docs sweep"
-maestro unstash "docs sweep"</code></pre>
+          <pre class="code-block"><code>maestro stash "$SID"
+maestro unstash "$SID"</code></pre>
         </div>
 
         <div class="verb" id="verb-unarchive">
           <h3>maestro unarchive &lt;target&gt;</h3>
-          <p>Restore an archived session (and its subtree) to the sidebar; agents resume lazily on focus.</p>
-          <pre class="code-block"><code>maestro unarchive "refactor auth"</code></pre>
+          <p>Restore an archived session (and its subtree) to the sidebar; agents resume lazily on focus. Find archived ids with <code>maestro list --archived</code>.</p>
+          <pre class="code-block"><code>maestro unarchive "$SID"</code></pre>
         </div>
 
-        <h2 id="verbs-agents">Agents &amp; settings</h2>
+        <h2 id="verbs-agents">Agents &amp; accounts</h2>
 
         <div class="verb" id="verb-swap">
-          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--force]</span></h3>
-          <p>Replace the agent running in a tab <strong>in place</strong> (same tab id/position). <code>--resume &lt;id&gt;</code> continues an existing claude/codex conversation; otherwise a fresh agent boots — <code>--to</code> picks the provider, <code>--model</code> the model, <code>--handoff &lt;file&gt;</code> seeds its first prompt. The outgoing conversation is tombstoned (<code>reopen</code> / ⌘Z restores it). <code>--force</code> bypasses the busy guard.</p>
-          <pre class="code-block"><code>maestro swap "api tests" --to codex --model gpt-5</code></pre>
+          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex|opencode|aider] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--account &lt;id&gt;|user|auto] [--force] | --handoff-auto [--include "&lt;text&gt;"]</span></h3>
+          <p>Replace the agent running in a tab <strong>in place</strong> (same tab id/position).</p>
+          <ul class="flags">
+            <li><code>--resume &lt;id&gt;</code> continues an existing claude/codex/opencode/aider conversation; otherwise a fresh agent boots</li>
+            <li><code>--to</code> picks the provider, <code>--model</code> the model, <code>--handoff &lt;file&gt;</code> seeds its first prompt (handoff isn't supported for aider)</li>
+            <li><code>--account &lt;id&gt;</code> swaps the tab onto a different account of the same provider (see <code>maestro accounts list</code>); <code>user</code> swaps back to your personal login; <code>auto</code> picks by the configured strategy</li>
+            <li><code>--handoff-auto</code> has the outgoing agent write its own handoff document, archives it with grace, and opens the successor at the same tab placement — <code>--include "&lt;text&gt;"</code> adds context to the handoff prompt (not combinable with <code>--resume</code>/<code>--handoff</code>)</li>
+            <li><code>--force</code> bypasses the busy guard</li>
+          </ul>
+          <p>The outgoing conversation is tombstoned — <code>reopen</code> or ⌘Z restores it.</p>
+          <pre class="code-block"><code>maestro swap "$SID" --to codex --model gpt-5
+maestro swap "$SID" --handoff-auto --to claude --include "focus on the retry logic"</code></pre>
         </div>
+
+        <div class="verb" id="verb-accounts">
+          <h3>maestro accounts &lt;list | add | remove | rename | color | strategy | use | usage | refresh&gt;</h3>
+          <p>Manage claude/codex login accounts.</p>
+          <ul class="flags">
+            <li><code>list</code> every account with nickname, login state, limit state</li>
+            <li><code>add [--nickname &lt;n&gt;] [--provider &lt;claude|codex&gt;]</code> opens a login session and watches for the completed <code>/login</code> (default provider: claude)</li>
+            <li><code>remove &lt;id&gt; [--force] [--migrate]</code> deletes an account (<code>--force</code> if a session still uses it)</li>
+            <li><code>rename &lt;id&gt; "&lt;nickname&gt;"</code> · <code>color &lt;id&gt; &lt;hex&gt;</code> set the nickname/swatch</li>
+            <li><code>strategy &lt;useEvenly|mostAvailable5h|mostAvailable7d|sequential|rotate|ask&gt;</code> how a new agent session picks an account</li>
+            <li><code>use &lt;id&gt;</code> sets the active account</li>
+            <li><code>usage [--refresh]</code> each account's usage window · <code>refresh [id]</code> re-polls usage and renews a near-expiry token</li>
+          </ul>
+          <pre class="code-block"><code>maestro accounts list
+maestro accounts strategy mostAvailable5h</code></pre>
+        </div>
+
+        <h2 id="verbs-config">Config &amp; lookup</h2>
 
         <div class="verb" id="verb-settings">
           <h3>maestro settings &lt;list [group] | get &lt;key&gt; | set &lt;key&gt; &lt;value&gt;&gt;</h3>
-          <p>Read or change maestro settings. <code>list</code> writes the full settings catalog (keys, labels, descriptions, current values) to a file and prints its path — read that file to find the right key, then <code>get</code>/<code>set</code> it.</p>
+          <p>Read or change maestro settings. <code>list</code> writes the full settings catalog (keys, labels, descriptions, current values) to a file and prints its path — read that file to find the right key, then <code>get</code>/<code>set</code> it. Agent access is gated by <code>agentAwareness.settingsAccess</code>.</p>
           <pre class="code-block"><code>maestro settings list
 maestro settings set terminal.fontSize 14</code></pre>
         </div>
 
-        <div class="verb" id="verb-status-set">
-          <h3>maestro status-set &lt;target&gt; &lt;status&gt; <span class="opt">[--reason &lt;text&gt;]</span></h3>
-          <p>Manually override a session's status (e.g. <code>working</code>, <code>waiting</code>, <code>idle</code>). Mostly for scripting and testing.</p>
-          <pre class="code-block"><code>maestro status-set "api tests" waiting --reason "needs review"</code></pre>
+        <div class="verb" id="verb-commands">
+          <h3>maestro commands <span class="opt">[--search &lt;q&gt;]</span></h3>
+          <p>List every maestro command and its current keyboard shortcut(s). Writes the catalog (id, title, category, description, shortcuts) to a file and prints its path — same pattern as <code>settings list</code>. <code>--search</code> narrows by id/title/category substring.</p>
+          <pre class="code-block"><code>maestro commands --search split</code></pre>
         </div>
 
-        <div class="verb" id="verb-id">
-          <h3>maestro id &lt;target&gt;</h3>
-          <p>Print a session's full stable id (uuid). Titles change as an agent works and aren't a stable key — resolve a title/prefix to its id <strong>once</strong>, then target later commands by that id.</p>
-          <pre class="code-block"><code>SID=$(maestro id "api tests"); maestro focus "$SID"</code></pre>
+        <div class="verb" id="verb-keybind">
+          <h3>maestro keybind &lt;command&gt; &lt;chord&gt; <span class="opt">| --add &lt;chord&gt; | --remove &lt;chord&gt; | --unbind | --reset | --list</span></h3>
+          <p>Rebind an app command's keyboard shortcut: a bare chord replaces, <code>--add</code> adds a second, <code>--remove</code> drops one, <code>--unbind</code> removes all, <code>--reset</code> reverts to default, <code>--list</code> prints the effective bindings. Gated by <code>agentAwareness.settingsAccess</code>.</p>
+          <pre class="code-block"><code>maestro keybind session.split "cmd+d"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-docs">
+          <h3>maestro docs <span class="opt">[&lt;query&gt;]</span></h3>
+          <p>Answer "how do I / what does X do" questions about Maestro itself. With a query it returns the matching how-to topic(s); with none it prints an index of topics plus the other lookup verbs.</p>
+          <pre class="code-block"><code>maestro docs "how do I restore a closed tab"</code></pre>
         </div>
 
         <div class="verb" id="verb-help">
-          <h3>maestro help</h3>
-          <p>Print the built-in help. <code>maestro launch</code> — or bare <code>maestro</code> with no verb — launches (or focuses) the app.</p>
+          <h3>maestro help &nbsp;·&nbsp; maestro launch</h3>
+          <p><code>help</code> prints the built-in usage doc — every verb, every flag, always current. <code>launch</code> — or bare <code>maestro</code> with no verb — launches the app, or focuses it if it's already running.</p>
+          <pre class="code-block"><code>maestro help</code></pre>
+        </div>
+
+        <h2 id="verbs-maintenance">Maintenance</h2>
+
+        <div class="verb" id="verb-report">
+          <h3>maestro bug-report "&lt;what happened&gt;" &nbsp;·&nbsp; maestro report --type bug|feedback --text "&lt;message&gt;"</h3>
+          <p><code>bug-report</code> spins up a run that reads logs, state, and version, then shows a paste-ready handoff in a copy popup. <code>report</code> does the same without the interactive field — <code>--type bug</code> runs the log investigation, <code>--type feedback</code> (the default) builds a lightweight description + environment report with no investigation.</p>
+          <pre class="code-block"><code>maestro report --type feedback --text "would love vertical split panes"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-reap">
+          <h3>maestro reap <span class="opt">[--session &lt;id&gt; | --worktree &lt;path&gt;] [--dry-run]</span></h3>
+          <p>Kill leaked child processes (test runners, dev servers) left behind by a session or worktree. <code>--session &lt;id&gt;</code> reaps that session's process tree; <code>--worktree &lt;path&gt;</code> reaps maestro-marked processes still running under that path; with neither, it sweeps every leaked maestro-marked orphan. <code>--dry-run</code> reports what would be killed without killing it.</p>
+          <pre class="code-block"><code>maestro reap --dry-run</code></pre>
         </div>
 
         <h2 id="examples">Examples</h2>
-        <pre class="code-block"><code># claude session nested under the focused one, task assigned at spawn
-maestro open --kind claude --child --title "api tests" --prompt "run the api tests and fix failures"
+        <pre class="code-block"><code># spawn a claude session under the focused one, task assigned at spawn — keep its id
+SID=$(maestro open --kind claude --child --title "api tests" --prompt "run the api tests and fix failures")
 
-# shell tab next to the focused session
-maestro open --kind shell --sibling
+# block until it finishes, then read what it's doing
+maestro wait "$SID" --until idle --timeout 600
+maestro list | jq --arg s "$SID" '.[] | select(.id == $s)'
 
-# type a command into it and submit in one call
-maestro send "api tests" "npm test" --enter
+# type a command into it and submit (Enter is sent by default)
+maestro send "$SID" "npm test"
 
-# pop this session out into its own window
-maestro move "$MAESTRO_SESSION_ID" --new-window
+# already have a tab but only know its title? resolve once, then use the id
+SID=$(maestro id "api tests")
 
 # swap this tab's agent for codex, keeping the tab in place
 maestro swap "$MAESTRO_SESSION_ID" --to codex
+
+# compact this session, then keep going
+maestro compact "$MAESTRO_SESSION_ID" --then-send "continue"
+
+# pop this session out into its own window
+maestro move "$MAESTRO_SESSION_ID" --new-window
 
 # archive this session and its whole subtree
 maestro archive "$MAESTRO_SESSION_ID" --cascade --force</code></pre>

@@ -223,11 +223,11 @@
         <p>A single <code>maestro</code> binary over a unix socket drives <strong>everything from the terminal</strong> — open, focus, move, split, stash, and close sessions, swap an agent's model, even read and change settings. No reaching for the mouse. Everything the app can do, a script can do — and the agents can too: they spawn siblings, fan out subtasks, and manage their own sessions.</p>
       </div>
       <div class="feature-visual">
-        <pre class="code-block"><code>maestro list                        # every session as JSON
-maestro open --kind claude --child  # nest an agent under this one
-maestro send "api tests" "npm test"
-maestro swap "api tests" --to codex # switch the agent, keep the tab
-maestro settings set terminal.fontSize 14</code></pre>
+        <pre class="code-block"><code>maestro list                                # every session as JSON
+SID=$(maestro open --kind claude --child)   # nest an agent under this one
+maestro send "$SID" "npm test"              # type it and submit
+maestro wait "$SID" --until idle            # block until it's done
+maestro swap "$SID" --to codex              # switch the agent, keep the tab</code></pre>
         <p style="margin-bottom:0;"><a href="cli.html">Read the CLI docs →</a></p>
       </div>
     </section>
