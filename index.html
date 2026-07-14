@@ -212,22 +212,7 @@
         <p>Every session can have children: spawn a child agent for a subtask, a sibling for parallel work — <code>⌘T</code> and <code>⌥⌘T</code> from the keyboard, or <code>--child</code> and <code>--sibling</code> from the CLI. The explorer shows the whole lineage per project, and closing a parent can cascade through its finished subtree in one stroke. Agents structure their own work the same way: a session fans its subtasks out into child sessions and reports back up the tree.</p>
       </div>
       <div class="feature-visual">
-        <div class="mock-card">
-          <div class="mock-card-main"><div class="name">build auth feature</div><div class="mock-sub">claude · master · working</div></div>
-          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">4:02</span></span><span class="mock-meta">opus 4.8 · 96k</span></div>
-        </div>
-        <div class="mock-card mock-card--child" style="margin-top:8px;">
-          <div class="mock-card-main"><div class="name">write unit tests</div><div class="mock-sub">claude · master · working</div></div>
-          <div class="mock-card-side"><span class="pill pill--working"><span class="pill-status">working</span><span class="pill-time">1:12</span></span><span class="mock-meta">sonnet 5 · 27k</span></div>
-        </div>
-        <div class="mock-card mock-card--grandchild" style="margin-top:8px;">
-          <div class="mock-card-main"><div class="name">fix fixtures</div><div class="mock-sub" style="color:var(--prompt)">Overwrite snapshot?</div></div>
-          <div class="mock-card-side"><span class="pill pill--prompt"><span class="pill-status">prompt</span><span class="pill-time">0:09</span></span><span class="mock-meta">sonnet 5 · 9k</span></div>
-        </div>
-        <div class="mock-card mock-card--child" style="margin-top:8px;">
-          <div class="mock-card-main"><div class="name">api docs</div><div class="mock-sub" style="color:var(--review)">Ready for you to review</div></div>
-          <div class="mock-card-side"><span class="pill pill--review"><span class="pill-status">review</span><span class="pill-time">0:41</span></span><span class="mock-meta">gpt-5 · 33k</span></div>
-        </div>
+        <img class="feature-shot" src="assets/tree.png?v=20260713" width="636" height="872" alt="A project's session tree in Maestro: 'build auth feature' with nested child sessions 'write integration tests' (aider) and 'api docs' (codex), each a status card with its own agent, model, and context size." loading="lazy">
       </div>
     </section>
 
