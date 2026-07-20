@@ -6,7 +6,7 @@
   <title>Maestro CLI — reference</title>
   <meta name="description" content="Maestro CLI reference: list, open, focus, send, wait, compact, swap, accounts, settings — one binary, one socket that drives the UI, your scripts, and the agents.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/site.css?v=20260706">
+  <link rel="stylesheet" href="assets/site.css?v=20260719">
   <script src="assets/analytics.js" async></script>
   <script src="assets/copy.js" defer></script>
 </head>
@@ -45,6 +45,8 @@
         <div class="nav-group">Layout &amp; windows</div>
         <a href="#verb-split">split</a>
         <a href="#verb-panel">panel</a>
+        <a href="#verb-open-file">open-file</a>
+        <a href="#verb-web-clear">web-clear</a>
         <a href="#verb-move">move</a>
         <a href="#verb-move-project">move-project</a>
         <a href="#verb-duplicate-window">duplicate-window</a>
@@ -55,6 +57,14 @@
         <a href="#verb-reopen">reopen</a>
         <a href="#verb-stash">stash / unstash</a>
         <a href="#verb-unarchive">unarchive</a>
+        <a href="#verb-promote">promote</a>
+        <div class="nav-group">Cards &amp; metadata</div>
+        <a href="#verb-color">color</a>
+        <a href="#verb-card">card</a>
+        <a href="#verb-snooze">snooze</a>
+        <a href="#verb-job-set">job-set</a>
+        <a href="#verb-pr-set">pr-set / mark-merged</a>
+        <a href="#verb-link">links</a>
         <div class="nav-group">Agents &amp; accounts</div>
         <a href="#verb-swap">swap</a>
         <a href="#verb-accounts">accounts</a>
@@ -64,6 +74,10 @@
         <a href="#verb-keybind">keybind</a>
         <a href="#verb-docs">docs</a>
         <a href="#verb-help">help / launch</a>
+        <div class="nav-group">Analytics &amp; extensions</div>
+        <a href="#verb-view">view</a>
+        <a href="#verb-timeline">timeline</a>
+        <a href="#verb-ext">ext</a>
         <div class="nav-group">Maintenance</div>
         <a href="#verb-report">report / bug-report</a>
         <a href="#verb-reap">reap</a>
@@ -98,15 +112,15 @@ maestro wait "$SID" --until idle</code></pre>
         </div>
 
         <div class="verb" id="verb-open">
-          <h3>maestro open --kind &lt;claude|codex|opencode|aider|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;] [--prompt "&lt;task&gt;"] [--model &lt;id|@user&gt;] [--permission-mode &lt;mode|@user&gt;]</span></h3>
+          <h3>maestro open --kind &lt;claude|codex|opencode|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;] [--prompt "&lt;task&gt;"] [--model &lt;id|@user&gt;] [--permission-mode &lt;mode|@user&gt;]</span></h3>
           <p>Open a new session and print its id. By default it inherits the cwd of the tab the command ran in — pass <code>--cwd</code> to override, or run from outside maestro to start in your home directory.</p>
           <ul class="flags">
-            <li><code>--kind</code> claude, codex, opencode, aider, or shell (default shell)</li>
+            <li><code>--kind</code> claude, codex, opencode, or shell (default shell)</li>
             <li><code>--child</code> / <code>--sibling</code> place relative to the FOCUSED session (parent and cwd resolved server-side)</li>
             <li><code>--parent &lt;id&gt;</code> nests under a specific session</li>
             <li><code>--cwd &lt;dir&gt;</code> working directory</li>
             <li><code>--title &lt;t&gt;</code> tab title</li>
-            <li><code>--prompt "&lt;task&gt;"</code> seeds an agent (claude/codex/opencode) with its first task at spawn — one command, no follow-up <code>send</code>. Not supported for aider.</li>
+            <li><code>--prompt "&lt;task&gt;"</code> seeds an agent (claude/codex/opencode) with its first task at spawn — one command, no follow-up <code>send</code>.</li>
             <li><code>--model &lt;id|@user&gt;</code> agent model for this session — an id, <code>@user</code> to match your own CLI default, or <code>""</code> for the agent's native default</li>
             <li><code>--permission-mode &lt;mode|@user&gt;</code> claude interaction mode: <code>default</code>, <code>acceptEdits</code>, <code>plan</code>, <code>bypassPermissions</code>, or <code>@user</code></li>
           </ul>
@@ -187,9 +201,26 @@ maestro focus "$SID"</code></pre>
         </div>
 
         <div class="verb" id="verb-panel">
-          <h3>maestro panel &lt;target&gt; <span class="opt">[--url &lt;url&gt;] [--off]</span></h3>
-          <p>Open the side panel showing a live web preview for the session — the dev-server URL is auto-detected, or set one with <code>--url</code>. <code>--off</code> hides it.</p>
+          <h3>maestro panel &lt;target&gt; <span class="opt">[--url &lt;url&gt;] [--off] [--close-view &lt;id&gt;] [--reopen-view]</span></h3>
+          <p>Open the session's side panel — by default a live web preview (the dev-server URL is auto-detected, or set one with <code>--url</code>). The panel is tabbed and holds web previews and code-editor views side by side.</p>
+          <ul class="flags">
+            <li><code>--off</code> hides the panel</li>
+            <li><code>--close-view &lt;id&gt;</code> closes a specific panel tab (a <code>code-editor#&lt;path&gt;</code> or web-preview instance id)</li>
+            <li><code>--reopen-view</code> reopens the last pane tab closed for the session (LIFO)</li>
+          </ul>
           <pre class="code-block"><code>maestro panel "$SID" --url http://localhost:5173</code></pre>
+        </div>
+
+        <div class="verb" id="verb-open-file">
+          <h3>maestro open-file &lt;target&gt; &lt;path&gt;[:line] <span class="opt">[--with &lt;viewId&gt;]</span></h3>
+          <p>Open a file in the session's side-panel code editor, optionally at a line. <code>--with &lt;viewId&gt;</code> opens it in a specific editor view instead — an extension-contributed panel view, or <code>code-editor</code> for the default text editor.</p>
+          <pre class="code-block"><code>maestro open-file "$SID" src/billing.ts:42</code></pre>
+        </div>
+
+        <div class="verb" id="verb-web-clear">
+          <h3>maestro web-clear</h3>
+          <p>Wipe the web preview's browsing data — cookies, logins, localStorage, and cache. The preview shares <strong>one</strong> persistent browser profile across every session, window, and project, so this clears it everywhere and signs you out of every previewed site.</p>
+          <pre class="code-block"><code>maestro web-clear</code></pre>
         </div>
 
         <div class="verb" id="verb-move">
@@ -255,14 +286,65 @@ maestro unstash "$SID"</code></pre>
           <pre class="code-block"><code>maestro unarchive "$SID"</code></pre>
         </div>
 
+        <div class="verb" id="verb-promote">
+          <h3>maestro promote &lt;target&gt;</h3>
+          <p>Promote a live orchestrator run, or a stashed session, into a normal permanent tab — detaches it from its run and clears the orchestrator flag so it becomes a regular session.</p>
+          <pre class="code-block"><code>maestro promote "$SID"</code></pre>
+        </div>
+
+        <h2 id="verbs-cards">Cards &amp; metadata</h2>
+
+        <div class="verb" id="verb-color">
+          <h3>maestro color &lt;target&gt; "&lt;#hex&gt;" <span class="opt">| --clear</span></h3>
+          <p>Tint a session's card with a custom color. <strong>Quote the hex</strong> — an unquoted <code>#</code> starts a shell comment. <code>--clear</code> reverts to the theme's default card background.</p>
+          <pre class="code-block"><code>maestro color "$SID" "#3fb87f"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-card">
+          <h3>maestro card &lt;target&gt; <span class="opt">[--compact | --normal | --toggle]</span></h3>
+          <p>Switch a session's sidebar card between the compact one-line row and the full card (no flag toggles). Persists per session; a compact project group still overrides it while collapsed.</p>
+          <pre class="code-block"><code>maestro card "$SID" --compact</code></pre>
+        </div>
+
+        <div class="verb" id="verb-snooze">
+          <h3>maestro snooze &lt;target&gt; --for &lt;5m|15m|1h|3h|tomorrow|…&gt; <span class="opt">| --clear</span></h3>
+          <p>Quiet a session now and tuck it into the collapsed Snoozed section until the duration elapses, then mark it unread and notify so it draws attention again. <code>--for</code> accepts a compound duration (e.g. <code>90m</code>, <code>1h30m</code>, <code>2d</code>) or <code>tomorrow</code> (next 9am). <code>--clear</code> unsnoozes it immediately. Focusing a snoozed session does not wake it.</p>
+          <pre class="code-block"><code>maestro snooze "$SID" --for 1h30m</code></pre>
+        </div>
+
+        <div class="verb" id="verb-job-set">
+          <h3>maestro job-set &lt;target&gt; &lt;code|action|info&gt;</h3>
+          <p>Override a session's inferred job classification — <code>code</code> (edited source), <code>action</code> (ran things), or <code>info</code> (investigation). Shows as a tag on the card.</p>
+          <pre class="code-block"><code>maestro job-set "$SID" code</code></pre>
+        </div>
+
+        <div class="verb" id="verb-pr-set">
+          <h3>maestro pr-set &lt;target&gt; &lt;number|url&gt; &nbsp;·&nbsp; maestro mark-merged &lt;target&gt;</h3>
+          <p><code>pr-set</code> attaches a pull request to a session (a bare number resolves via the git <code>origin</code> remote); it shows as a <code>#NNN</code> link on the card. <code>mark-merged</code> marks a code session's change as merged for when <code>gh</code> can't detect the PR.</p>
+          <pre class="code-block"><code>maestro pr-set "$SID" 482</code></pre>
+        </div>
+
+        <div class="verb" id="verb-link">
+          <h3>maestro link-add &lt;target&gt; &lt;name&gt; &lt;url&gt; <span class="opt">·&nbsp; link-list ·&nbsp; link-set ·&nbsp; link-rm</span></h3>
+          <p>Attach named hyperlinks to a session card — they show as clickable labels beside the pill. URLs must be http(s).</p>
+          <ul class="flags">
+            <li><code>link-add &lt;target&gt; &lt;name&gt; &lt;url&gt;</code> add or update a link (upserts by name)</li>
+            <li><code>link-list &lt;target&gt;</code> list the session's links (name → url)</li>
+            <li><code>link-set &lt;target&gt; [&lt;name&gt; &lt;url&gt; …]</code> replace all links; no pairs clears them</li>
+            <li><code>link-rm &lt;target&gt; &lt;name&gt;</code> remove the named link</li>
+          </ul>
+          <pre class="code-block"><code>maestro link-add "$SID" preview https://pr-482.preview.app
+maestro link-add "$SID" ticket https://linear.app/x/ENG-482</code></pre>
+        </div>
+
         <h2 id="verbs-agents">Agents &amp; accounts</h2>
 
         <div class="verb" id="verb-swap">
-          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex|opencode|aider] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--account &lt;id&gt;|user|auto] [--force] | --handoff-auto [--include "&lt;text&gt;"]</span></h3>
+          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex|opencode] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--account &lt;id&gt;|user|auto] [--force] | --handoff-auto [--include "&lt;text&gt;"]</span></h3>
           <p>Replace the agent running in a tab <strong>in place</strong> (same tab id/position).</p>
           <ul class="flags">
-            <li><code>--resume &lt;id&gt;</code> continues an existing claude/codex/opencode/aider conversation; otherwise a fresh agent boots</li>
-            <li><code>--to</code> picks the provider, <code>--model</code> the model, <code>--handoff &lt;file&gt;</code> seeds its first prompt (handoff isn't supported for aider)</li>
+            <li><code>--resume &lt;id&gt;</code> continues an existing claude/codex/opencode conversation; otherwise a fresh agent boots</li>
+            <li><code>--to</code> picks the provider, <code>--model</code> the model, <code>--handoff &lt;file&gt;</code> seeds its first prompt</li>
             <li><code>--account &lt;id&gt;</code> swaps the tab onto a different account of the same provider (see <code>maestro accounts list</code>); <code>user</code> swaps back to your personal login; <code>auto</code> picks by the configured strategy</li>
             <li><code>--handoff-auto</code> has the outgoing agent write its own handoff document, archives it with grace, and opens the successor at the same tab placement — <code>--include "&lt;text&gt;"</code> adds context to the handoff prompt (not combinable with <code>--resume</code>/<code>--handoff</code>)</li>
             <li><code>--force</code> bypasses the busy guard</li>
@@ -273,11 +355,12 @@ maestro swap "$SID" --handoff-auto --to claude --include "focus on the retry log
         </div>
 
         <div class="verb" id="verb-accounts">
-          <h3>maestro accounts &lt;list | add | remove | rename | color | strategy | use | usage | refresh&gt;</h3>
+          <h3>maestro accounts &lt;list | add | reauth | remove | rename | color | strategy | use | usage | refresh&gt;</h3>
           <p>Manage claude/codex login accounts.</p>
           <ul class="flags">
             <li><code>list</code> every account with nickname, login state, limit state</li>
             <li><code>add [--nickname &lt;n&gt;] [--provider &lt;claude|codex&gt;]</code> opens a login session and watches for the completed <code>/login</code> (default provider: claude)</li>
+            <li><code>reauth &lt;id&gt;</code> re-authenticates an existing account in place — opens a login session against its own home, no new account created</li>
             <li><code>remove &lt;id&gt; [--force] [--migrate]</code> deletes an account (<code>--force</code> if a session still uses it)</li>
             <li><code>rename &lt;id&gt; "&lt;nickname&gt;"</code> · <code>color &lt;id&gt; &lt;hex&gt;</code> set the nickname/swatch</li>
             <li><code>strategy &lt;useEvenly|mostAvailable5h|mostAvailable7d|sequential|rotate|ask&gt;</code> how a new agent session picks an account</li>
@@ -319,6 +402,26 @@ maestro settings set terminal.fontSize 14</code></pre>
           <h3>maestro help &nbsp;·&nbsp; maestro launch</h3>
           <p><code>help</code> prints the built-in usage doc — every verb, every flag, always current. <code>launch</code> — or bare <code>maestro</code> with no verb — launches the app, or focuses it if it's already running.</p>
           <pre class="code-block"><code>maestro help</code></pre>
+        </div>
+
+        <h2 id="verbs-analytics">Analytics &amp; extensions</h2>
+
+        <div class="verb" id="verb-view">
+          <h3>maestro view &lt;analytics|settings|accounts&gt; <span class="opt">[--window | --overlay]</span></h3>
+          <p>Open a full view — analytics, settings, or accounts — as its own window (default) or as an in-window overlay (<code>--overlay</code>).</p>
+          <pre class="code-block"><code>maestro view analytics</code></pre>
+        </div>
+
+        <div class="verb" id="verb-timeline">
+          <h3>maestro timeline <span class="opt">[--from &lt;ms&gt;] [--to &lt;ms&gt;] [--stats]</span></h3>
+          <p>Query the activity timeline for a time range (epoch-ms). <code>--stats</code> also returns per-day rollups: KPIs, model split, concurrency, the bottleneck breakdown, and leverage/parallelism.</p>
+          <pre class="code-block"><code>maestro timeline --from 1721000000000 --stats</code></pre>
+        </div>
+
+        <div class="verb" id="verb-ext">
+          <h3>maestro ext &lt;list | install &lt;path&gt; | uninstall &lt;id&gt; | reload&gt;</h3>
+          <p>Manage extensions. <code>list</code> shows every installed extension with its contributions and any load errors; <code>install &lt;path&gt;</code> copies a local extension folder into the user extensions dir; <code>uninstall &lt;id&gt;</code> removes it (built-ins can't be uninstalled); <code>reload</code> re-scans by relaunching the app. Extensions run as trusted code with full filesystem access — only install ones you trust.</p>
+          <pre class="code-block"><code>maestro ext list</code></pre>
         </div>
 
         <h2 id="verbs-maintenance">Maintenance</h2>

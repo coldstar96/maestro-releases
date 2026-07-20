@@ -6,7 +6,7 @@
   <title>Maestro — conduct a fleet of AI coding agents</title>
   <meta name="description" content="Maestro is a native macOS terminal multiplexer for orchestrating many AI coding agents in parallel — Claude Code, Codex, and ordinary shells.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/site.css?v=20260713b">
+  <link rel="stylesheet" href="assets/site.css?v=20260719">
   <script src="assets/analytics.js" async></script>
   <script src="assets/copy.js" defer></script>
 </head>
@@ -35,7 +35,7 @@
       <p class="btn-note">One command installs the app + CLI — signed, notarized, no Gatekeeper dialog. macOS · Apple Silicon · free</p>
 
       <div class="mockup">
-        <img class="hero-shot" src="assets/hero.png?v=20260713b" width="2624" height="1824" alt="Maestro conducting a fleet of AI coding agents — a sidebar of live status cards for Claude, Codex, and aider sessions grouped by project, alongside a focused Claude session applying a live code edit and running its test suite." loading="eager">
+        <img class="hero-shot" src="assets/hero.png?v=20260713b" width="2624" height="1824" alt="Maestro conducting a fleet of AI coding agents — a sidebar of live status cards for Claude, Codex, and other agent sessions grouped by project, alongside a focused Claude session applying a live code edit and running its test suite." loading="eager">
       </div>
     </div>
   </section>
@@ -110,7 +110,7 @@
       <div class="feature-text">
         <div class="feature-kicker">Situational awareness</div>
         <h2>Every agent, one glance.</h2>
-        <p>Projects group sessions into a lineage tree of status cards, each with a live timer — and every state has a color, so one glance at a card's pill tells you exactly what an agent is doing and whether it needs you. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. Tabs show the model and context size at a glance.</p>
+        <p>Projects group sessions into a lineage tree of status cards, each with a live timer — and every state has a color, so one glance at a card's pill tells you exactly what an agent is doing and whether it needs you. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. Cards show the model and context size at a glance, plus a job tag — code, action, or investigation — an auto-detected <code>#PR</code> link the moment you open a pull request, and any named links you pin to a card, like a branch, a ticket, or a preview URL.</p>
       </div>
       <div class="feature-visual">
         <div class="mock-card mock-card--selected">
@@ -152,7 +152,7 @@
       <div class="feature-text">
         <div class="feature-kicker">Multi-account</div>
         <h2>All your Claude accounts, one fleet.</h2>
-        <p>Sign in to every Claude account you have — work, personal, the spare Max plan — each with isolated credentials and a live usage meter. New sessions pick an account by strategy: spread work evenly, grab the most headroom, rotate, or always ask. When an account hits its usage limit mid-run, the session fails over to a fresh one and keeps going — and you can swap any session's account mid-conversation from the card, the context menu, or <code>maestro swap --account</code>. Even a <code>claude</code> you hand-type into a shell binds to an account automatically.</p>
+        <p>Sign in to every Claude account you have — work, personal, the spare Max plan — each with isolated credentials and a live usage meter. New sessions pick an account by strategy: spread work evenly, grab the most headroom, rotate, or always ask. When an account hits its usage limit mid-run, the session fails over to a fresh one and keeps going — and you can swap any session's account mid-conversation from the card, the context menu, or <code>maestro swap --account</code>. When a login goes stale the row flags <em>revoked</em> or <em>expired</em> — click the badge to re-authenticate in place, no session lost — and each row shows its plan's renewal date. Even a <code>claude</code> you hand-type into a shell binds to an account automatically.</p>
       </div>
       <div class="feature-visual">
         <img class="feature-shot" src="assets/accounts.png?v=20260713c" width="1717" height="803" alt="Maestro's Accounts panel: two Claude and two Codex accounts, each with its own credentials, plan, and live usage meters, plus a session-assignment strategy and auto-failover toggle." loading="lazy">
@@ -189,6 +189,95 @@
 
     <section class="feature container feature--flip">
       <div class="feature-text">
+        <div class="feature-kicker">Built-in editor</div>
+        <h2>Read and edit right beside the agent.</h2>
+        <p>Every session carries a side panel with its own tabs, so you can open a file in a built-in editor without leaving Maestro. Click a path in the terminal or hit <code>⌘P</code> to jump straight to it. A dirty-diff gutter marks exactly what changed since the last commit — click any hunk to peek the original — and the same edit markers ride along in the scrollbar overview ruler and the minimap, so every change an agent made is one glance (and one click) away. Markdown opens with a live reading preview and <code>⌘F</code> find; images and editable SVGs get a zoom/pan viewer; extensions can even contribute editors of their own. <code>⌘⇧T</code> reopens the last tab you closed, panel tabs included.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-editor">
+          <div class="mock-tabstrip">
+            <span class="mock-tab">terminal</span>
+            <span class="mock-tab mock-tab--active">billing.ts</span>
+            <span class="mock-tab">README.md</span>
+          </div>
+          <div class="mock-code">
+            <div class="code-row"><span class="gutter"></span><span class="lineno">16</span><span class="code-text"><span class="kw">export function</span> <span class="fn">priceRun</span>(run: Run): number {</span></div>
+            <div class="code-row"><span class="gutter gm-add"></span><span class="lineno">17</span><span class="code-text">  <span class="kw">const</span> rate = RATES[run.model] ?? DEFAULT_RATE</span></div>
+            <div class="code-row"><span class="gutter gm-add"></span><span class="lineno">18</span><span class="code-text">  <span class="kw">return</span> run.tokens * rate</span></div>
+            <div class="code-row"><span class="gutter"></span><span class="lineno">19</span><span class="code-text">}</span></div>
+            <div class="code-row"><span class="gutter"></span><span class="lineno">20</span><span class="code-text"></span></div>
+            <div class="code-row"><span class="gutter"></span><span class="lineno">21</span><span class="code-text">  <span class="cm">// leverage = agent work ÷ your active time</span></span></div>
+            <div class="code-row"><span class="gutter gm-mod"></span><span class="lineno">22</span><span class="code-text">  <span class="kw">const</span> leverage = agentMs / <span class="fn">Math</span>.max(activeMs, <span class="str">1</span>)</span></div>
+            <div class="code-row"><span class="gutter"></span><span class="lineno">23</span><span class="code-text">  <span class="kw">return</span> { cost, leverage }</span></div>
+          </div>
+        </div>
+        <div style="margin-top:14px;color:var(--subtle);font-size:12px;">▎ dirty-diff gutter · ⌘F in preview · zoom/pan image &amp; SVG viewer</div>
+      </div>
+    </section>
+
+    <section class="feature container">
+      <div class="feature-text">
+        <div class="feature-kicker">Analytics</div>
+        <h2>See how much your fleet actually ships.</h2>
+        <p>Maestro logs every session's activity, so you get real numbers instead of a hunch. A GitHub-style heatmap shows a rolling year of work at a glance, and per-day and per-range dashboards break down agent work time, tokens, model split, and how many agents ran at once. A <strong>leverage ratio</strong> weighs agent work against your own active time, and a self-priced cost estimate puts a dollar figure on the run. A bottleneck view shows where the time actually went — waiting on you, blocked on usage limits, or grinding on the machine — and your away-from-keyboard stretches are excluded, so the numbers reflect real work, not the hours your laptop sat open.</p>
+      </div>
+      <div class="feature-visual">
+        <div class="mock-kpis">
+          <div class="kpi"><div class="kpi-val accent">3.4×</div><div class="kpi-lbl">Leverage</div></div>
+          <div class="kpi"><div class="kpi-val">6h 12m</div><div class="kpi-lbl">Agent work</div></div>
+          <div class="kpi"><div class="kpi-val">1.9M</div><div class="kpi-lbl">Tokens</div></div>
+          <div class="kpi"><div class="kpi-val">7</div><div class="kpi-lbl">Peak parallel</div></div>
+        </div>
+        <div class="statusmix" aria-hidden="true">
+          <span style="width:52%;background:var(--working)"></span>
+          <span style="width:14%;background:var(--prompt)"></span>
+          <span style="width:9%;background:var(--limited)"></span>
+          <span style="width:25%;background:#888"></span>
+        </div>
+        <div class="mix-legend">
+          <span><i style="background:var(--working)"></i>working</span>
+          <span><i style="background:var(--prompt)"></i>needs you</span>
+          <span><i style="background:var(--limited)"></i>limited</span>
+          <span><i style="background:#888"></i>idle</span>
+        </div>
+        <div class="heatmap" aria-hidden="true">
+            <div class="hm-col"><i class="hm"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm l3"></i><i class="hm l3"></i></div>
+            <div class="hm-col"><i class="hm l3"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l4"></i><i class="hm l3"></i></div>
+            <div class="hm-col"><i class="hm l3"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l2"></i></div>
+            <div class="hm-col"><i class="hm l3"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm l2"></i><i class="hm l1"></i><i class="hm l1"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l3"></i><i class="hm l1"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l1"></i><i class="hm"></i><i class="hm l2"></i><i class="hm"></i><i class="hm"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l2"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm"></i><i class="hm l1"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l2"></i><i class="hm l2"></i><i class="hm"></i><i class="hm"></i><i class="hm"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm l2"></i><i class="hm"></i><i class="hm"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm"></i><i class="hm"></i><i class="hm l1"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm"></i><i class="hm l1"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l1"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm l2"></i></div>
+            <div class="hm-col"><i class="hm"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm l2"></i><i class="hm l3"></i></div>
+            <div class="hm-col"><i class="hm l2"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm l2"></i><i class="hm l4"></i><i class="hm l4"></i></div>
+            <div class="hm-col"><i class="hm l3"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i></div>
+            <div class="hm-col"><i class="hm l4"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l3"></i></div>
+            <div class="hm-col"><i class="hm l4"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm"></i></div>
+            <div class="hm-col"><i class="hm l3"></i><i class="hm l3"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm l2"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l1"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm l2"></i><i class="hm"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l2"></i><i class="hm l2"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm l2"></i><i class="hm l2"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm l4"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l1"></i><i class="hm"></i><i class="hm l3"></i></div>
+            <div class="hm-col"><i class="hm l1"></i><i class="hm l4"></i><i class="hm l3"></i><i class="hm l1"></i><i class="hm l1"></i><i class="hm l3"></i><i class="hm l3"></i></div>
+            <div class="hm-col"><i class="hm l2"></i><i class="hm l4"></i><i class="hm l2"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l2"></i></div>
+            <div class="hm-col"><i class="hm l2"></i><i class="hm"></i><i class="hm l1"></i><i class="hm l1"></i><i class="hm l3"></i><i class="hm l4"></i><i class="hm l1"></i></div>
+          </div>
+        <div style="margin-top:12px;color:var(--subtle);font-size:12px;">▦ a rolling year of activity · inactivity excluded</div>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
         <div class="feature-kicker">Orchestration</div>
         <h2>Say it in plain English. It just happens.</h2>
         <p>An always-on natural-language field sits at the bottom of every window — and it drives <em>everything</em>. Ask for it however you'd say it, and the orchestrator carries it out: spin up sessions, dispatch a task to any tab, type a command into a shell, change a setting, even swap this session's agent for a different AI. Anything you could do by hand — and anything the CLI can do — you can just <em>say</em>. Each query fires a non-blocking run to a warm-pooled agent, so the field is ready again the instant you hit Enter; runs stream live status chips and report back when they finish.</p>
@@ -212,7 +301,7 @@
         <p>Every session can have children: spawn a child agent for a subtask, a sibling for parallel work — <code>⌘T</code> and <code>⌥⌘T</code> from the keyboard, or <code>--child</code> and <code>--sibling</code> from the CLI. The explorer shows the whole lineage per project, and closing a parent can cascade through its finished subtree in one stroke. Agents structure their own work the same way: a session fans its subtasks out into child sessions and reports back up the tree.</p>
       </div>
       <div class="feature-visual">
-        <img class="feature-shot" src="assets/tree.png?v=20260713" width="636" height="872" alt="A project's session tree in Maestro: 'build auth feature' with nested child sessions 'write integration tests' (aider) and 'api docs' (codex), each a status card with its own agent, model, and context size." loading="lazy">
+        <img class="feature-shot" src="assets/tree.png?v=20260713" width="636" height="872" alt="A project's session tree in Maestro: 'build auth feature' with nested child sessions 'write integration tests' and 'api docs' (codex), each a status card with its own agent, model, and context size." loading="lazy">
       </div>
     </section>
 
@@ -236,7 +325,7 @@ maestro swap "$SID" --to codex              # switch the agent, keep the tab</co
   <section class="download" id="download">
     <div class="container">
       <h2>Get Maestro</h2>
-      <p class="req">macOS on Apple Silicon · v0.2.12</p>
+      <p class="req">macOS on Apple Silicon · v0.2.16</p>
       <pre class="code-block"><code>curl -fsSL https://maestroterminal.com/install.sh | sh</code></pre>
       <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download Maestro-arm64.dmg</a>
       <p class="btn-note">Signed &amp; notarized — launches straight from the dmg, no Gatekeeper prompt, and auto-updates itself after that. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>
