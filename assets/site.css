@@ -13,7 +13,7 @@
   --waiting: #ffb300;
   --idle: #66bb6a;
   --prompt: #ff6d00;
-  --review: #b388ff;
+  --review: #f57c00;
   --paused: #ec407a;
   --limited: #ef5350;
   --login: #ff9800;
@@ -51,11 +51,8 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 .site-header .container { display: flex; align-items: center; gap: 24px; height: 56px; }
 .logo { font-family: var(--mono); font-weight: 700; font-size: 18px; color: var(--text); display: flex; align-items: center; gap: 10px; }
 .logo:hover { text-decoration: none; }
-.logo-dots { display: inline-flex; gap: 4px; }
-.logo-dots span { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-.logo-dots span:nth-child(1) { background: var(--working); }
-.logo-dots span:nth-child(2) { background: var(--waiting); }
-.logo-dots span:nth-child(3) { background: var(--idle); }
+.logo-mark { display: inline-flex; }
+.logo-mark svg { display: block; width: 24px; height: 18px; }
 .site-nav { margin-left: auto; display: flex; align-items: center; gap: 20px; font-size: 14px; }
 .site-nav a { color: var(--muted); }
 .site-nav a:hover { color: var(--text); text-decoration: none; }
@@ -162,7 +159,8 @@ code { background: var(--surface); border: 1px solid var(--border); border-radiu
 
 /* notification mock */
 .notif { display: flex; gap: 12px; align-items: center; font-family: var(--sans); background: var(--card); border: 1px solid var(--border-strong); border-radius: 12px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
-.notif-icon { flex: none; width: 34px; height: 34px; border-radius: 8px; background: var(--surface); display: flex; align-items: center; justify-content: center; }
+.notif-icon { flex: none; width: 34px; height: 34px; }
+.notif-icon img { width: 100%; height: 100%; display: block; }
 .notif-app { font-size: 11px; color: var(--subtle); font-family: var(--mono); }
 .notif-title { font-size: 13px; font-weight: 600; color: var(--text); }
 .notif-text { font-size: 13px; color: var(--muted); }
