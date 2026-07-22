@@ -217,9 +217,21 @@
 
     <section class="feature container">
       <div class="feature-text">
+        <div class="feature-kicker">Timeline</div>
+        <h2>Watch the whole week play back.</h2>
+        <p>Every session becomes a block on a real time axis, colored second by second by what it was doing — working, waiting on you, blocked at a usage limit, idle. Blocks survive quits and restarts, so a run that spanned three days reads as one bar. The strip along the top marks when <em>you</em> were actually at the keyboard, which is what makes the rest honest: tell Maestro which states count as being away and it trims those stretches out of every number below. Scrub Day, Week, Month, or Year, watch the playhead track live as agents work, and hit <strong>Analyze my usage with an agent</strong> to open a session that reads the whole picture and tells you what to fix.</p>
+      </div>
+      <div class="feature-visual">
+        <img class="feature-shot" src="assets/timeline.png?v=20260721" width="1720" height="1621" alt="Maestro's Timeline window: a week of agent sessions as colored blocks on a time axis with an activity band showing when the user was at the keyboard, above a dashboard of agent-work, active time, leverage and cost, an agent-work vs active-time chart, and a 'Where the time went' status breakdown." loading="lazy">
+        <div style="margin-top:14px;color:var(--subtle);font-size:12px;">▬ 38.8h of agent work against 2.2h of yours · 17.6× leverage · median 44s until you acted</div>
+      </div>
+    </section>
+
+    <section class="feature container feature--flip">
+      <div class="feature-text">
         <div class="feature-kicker">Analytics</div>
         <h2>See how much your fleet actually ships.</h2>
-        <p>Maestro logs every session's activity, so you get real numbers instead of a hunch. A GitHub-style heatmap shows a rolling year of work at a glance, and per-day and per-range dashboards break down agent work time, tokens, model split, and how many agents ran at once. A <strong>leverage ratio</strong> weighs agent work against your own active time, and a self-priced cost estimate puts a dollar figure on the run. A bottleneck view shows where the time actually went — waiting on you, blocked on usage limits, or grinding on the machine — and your away-from-keyboard stretches are excluded, so the numbers reflect real work, not the hours your laptop sat open.</p>
+        <p>Maestro logs every session's activity, so you get real numbers instead of a hunch. A GitHub-style heatmap shows a rolling year of work at a glance, and per-day and per-range dashboards break down agent work time, tokens, model split, and how many agents ran at once. A <strong>leverage ratio</strong> weighs agent work against your own active time, and a self-priced cost estimate puts a dollar figure on the run. A bottleneck view shows where the time actually went — waiting on you, blocked on usage limits, or grinding on the machine — with median and p90 figures for how long each agent sat waiting before you got to it.</p>
       </div>
       <div class="feature-visual">
         <div class="mock-kpis">
@@ -276,7 +288,7 @@
       </div>
     </section>
 
-    <section class="feature container feature--flip">
+    <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">Orchestration</div>
         <h2>Say it in plain English. It just happens.</h2>
@@ -294,7 +306,7 @@
       </div>
     </section>
 
-    <section class="feature container">
+    <section class="feature container feature--flip">
       <div class="feature-text">
         <div class="feature-kicker">Task structure</div>
         <h2>Big tasks become trees, not tab soup.</h2>
@@ -305,7 +317,7 @@
       </div>
     </section>
 
-    <section class="feature container feature--flip">
+    <section class="feature container">
       <div class="feature-text">
         <div class="feature-kicker">One control plane</div>
         <h2>The UI, the CLI, and the agents share one language.</h2>
