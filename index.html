@@ -110,7 +110,7 @@
       <div class="feature-text">
         <div class="feature-kicker">Situational awareness</div>
         <h2>Every agent, one glance.</h2>
-        <p>Projects group sessions into a lineage tree of status cards, each with a live timer — and every state has a color, so one glance at a card's pill tells you exactly what an agent is doing and whether it needs you. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. Cards show the model and context size at a glance, plus a job tag — code, action, or investigation — an auto-detected <code>#PR</code> link the moment you open a pull request, and any named links you pin to a card, like a branch, a ticket, or a preview URL.</p>
+        <p>Projects group sessions into a lineage tree of status cards, each with a live timer — and every state has a color, so one glance at a card's pill tells you exactly what an agent is doing and whether it needs you. When an agent needs an answer (prompt) or has work ready to check (review), the card flips state, an unread dot lights up, a live terminal popup appears, and a native macOS notification takes you straight to the right tab. Cards show the model and context size at a glance, plus job and state badges you name yourself — call the work whatever it actually is, and each name keeps its own stable color — and any links you pin to a card, like a branch, a ticket, or a preview URL. Lost track of one? Quick-open finds a session by name, model, account, status, job, state, link, or agent kind.</p>
       </div>
       <div class="feature-visual">
         <div class="mock-card mock-card--selected">
@@ -126,8 +126,8 @@
           <div class="mock-card-side"><span class="pill pill--review"><span class="pill-status">review</span><span class="pill-time">1:05</span></span><span class="mock-meta">sonnet 5 · 44k</span></div>
         </div>
         <div class="mock-card" style="margin-top:8px;">
-          <div class="mock-card-main"><div class="name">docs sweep</div><div class="mock-sub" style="color:var(--waiting)">waiting on your input</div></div>
-          <div class="mock-card-side"><span class="pill pill--waiting"><span class="pill-status">waiting</span><span class="pill-time">0:32</span></span><span class="mock-meta">gpt-5 · 18k</span></div>
+          <div class="mock-card-main"><div class="name">docs sweep</div><div class="mock-sub" style="color:var(--done)">Finished its turn</div></div>
+          <div class="mock-card-side"><span class="pill pill--done"><span class="pill-status">done</span><span class="pill-time">0:32</span></span><span class="mock-meta">gpt-5 · 18k</span></div>
         </div>
       </div>
       <div class="legend-strip">
@@ -136,7 +136,6 @@
         <div class="legend-chip"><span class="pill pill--compacting">compacting</span><span class="meaning">condensing its context</span></div>
         <div class="legend-chip"><span class="pill pill--prompt">prompt</span><span class="meaning">needs your answer</span></div>
         <div class="legend-chip"><span class="pill pill--review">review</span><span class="meaning">ready for you to check</span></div>
-        <div class="legend-chip"><span class="pill pill--waiting">waiting</span><span class="meaning">blocked, waiting to continue</span></div>
         <div class="legend-chip"><span class="pill pill--done">done</span><span class="meaning">finished its turn</span></div>
         <div class="legend-chip"><span class="pill pill--paused">paused</span><span class="meaning">interrupted — resumes on demand</span></div>
         <div class="legend-chip"><span class="pill pill--limited">limited</span><span class="meaning">usage limit; counting down</span></div>
@@ -151,8 +150,9 @@
     <section class="feature container feature--flip">
       <div class="feature-text">
         <div class="feature-kicker">Multi-account</div>
-        <h2>All your Claude accounts, one fleet.</h2>
-        <p>Sign in to every Claude account you have — work, personal, the spare Max plan — each with isolated credentials and a live usage meter. New sessions pick an account by strategy: spread work evenly, grab the most headroom, rotate, or always ask. When an account hits its usage limit mid-run, the session fails over to a fresh one and keeps going — and you can swap any session's account mid-conversation from the card, the context menu, or <code>maestro swap --account</code>. When a login goes stale the row flags <em>revoked</em> or <em>expired</em> — click the badge to re-authenticate in place, no session lost — and each row shows its plan's renewal date. Even a <code>claude</code> you hand-type into a shell binds to an account automatically.</p>
+        <h2>All your agent accounts, one fleet.</h2>
+        <p>Claude, Codex, and Kimi all run side by side — sign in to every account you have, work, personal, the spare Max plan, each with isolated credentials and a live usage meter. New sessions pick an account by strategy: spread work evenly, grab the most headroom, rotate, or always ask. When an account hits its usage limit mid-run, the session fails over to a fresh one and keeps going — and you can swap any session's account mid-conversation from the card, the context menu, or <code>maestro swap --account</code>. When a login goes stale the row flags <em>revoked</em> or <em>expired</em> — click the badge to re-authenticate in place, no session lost — and each row shows its plan's renewal date. Even a <code>claude</code> you hand-type into a shell binds to an account automatically.</p>
+        <p style="margin-bottom:0;">Adding an agent doesn't mean waiting on us, either: Kimi ships as a built-in extension, so a provider brings its own accounts, credentials, and models to the same fleet.</p>
       </div>
       <div class="feature-visual">
         <img class="feature-shot" src="assets/accounts.png?v=20260713c" width="1717" height="803" alt="Maestro's Accounts panel: two Claude and two Codex accounts, each with its own credentials, plan, and live usage meters, plus a session-assignment strategy and auto-failover toggle." loading="lazy">
@@ -191,7 +191,7 @@
       <div class="feature-text">
         <div class="feature-kicker">Built-in editor</div>
         <h2>Read and edit right beside the agent.</h2>
-        <p>Every session carries a side panel with its own tabs, so you can open a file in a built-in editor without leaving Maestro. Click a path in the terminal or hit <code>⌘P</code> to jump straight to it. A dirty-diff gutter marks exactly what changed since the last commit — click any hunk to peek the original — and the same edit markers ride along in the scrollbar overview ruler and the minimap, so every change an agent made is one glance (and one click) away. Markdown opens with a live reading preview and <code>⌘F</code> find; images and editable SVGs get a zoom/pan viewer; extensions can even contribute editors of their own. <code>⌘⇧T</code> reopens the last tab you closed, panel tabs included.</p>
+        <p>Every session carries a side panel with its own tabs, so you can open a file in a built-in editor without leaving Maestro. Click a path in the terminal or hit <code>⌘P</code> to jump straight to it. It reads like an editor should: <code>⌘</code>-click a symbol or an import to jump to its definition, and <code>⌘[</code> / <code>⌘]</code> walk back and forward through everywhere you've been. A dirty-diff gutter marks exactly what changed since the last commit — click any hunk to peek the original — and the same edit markers ride along in the scrollbar overview ruler and the minimap, so every change an agent made is one glance (and one click) away. Markdown opens with a live reading preview and <code>⌘F</code> find; images and editable SVGs get a zoom/pan viewer; extensions can even contribute editors of their own. <code>⌘⇧T</code> reopens the last tab you closed, panel tabs included.</p>
       </div>
       <div class="feature-visual">
         <div class="mock-editor">
@@ -293,6 +293,7 @@
         <div class="feature-kicker">Orchestration</div>
         <h2>Say it in plain English. It just happens.</h2>
         <p>An always-on natural-language field sits at the bottom of every window — and it drives <em>everything</em>. Ask for it however you'd say it, and the orchestrator carries it out: spin up sessions, dispatch a task to any tab, type a command into a shell, change a setting, even swap this session's agent for a different AI. Anything you could do by hand — and anything the CLI can do — you can just <em>say</em>. Each query fires a non-blocking run to a warm-pooled agent, so the field is ready again the instant you hit Enter; runs stream live status chips and report back when they finish.</p>
+        <p style="margin-bottom:0;">And a dispatched message never lands on top of <em>you</em>. If you're halfway through typing a prompt when one arrives, it parks instead of merging into your text, then goes out the moment you submit — or release it yourself from the card. Force one through and Maestro banks your half-written draft in the agent's own kill ring and hands it straight back.</p>
       </div>
       <div class="feature-visual">
         <div class="mock-runbar"><span>⌘ maestro ›</span><span>run the tests in the billing tab and fix what breaks…</span></div>
@@ -313,7 +314,7 @@
         <p>Every session can have children: spawn a child agent for a subtask, a sibling for parallel work — <code>⌘T</code> and <code>⌥⌘T</code> from the keyboard, or <code>--child</code> and <code>--sibling</code> from the CLI. The explorer shows the whole lineage per project, and closing a parent can cascade through its finished subtree in one stroke. Agents structure their own work the same way: a session fans its subtasks out into child sessions and reports back up the tree.</p>
       </div>
       <div class="feature-visual">
-        <img class="feature-shot" src="assets/tree.png?v=20260713" width="636" height="872" alt="A project's session tree in Maestro: 'build auth feature' with nested child sessions 'write integration tests' and 'api docs' (codex), each a status card with its own agent, model, and context size." loading="lazy">
+        <img class="feature-shot" src="assets/tree.png?v=20260730" width="640" height="1330" alt="Maestro's sidebar for one project: six session cards with colored status pills and live timers — 'add rate limit headers' waiting on permission to edit rate-limit.ts, 'fix flaky ci test' working, 'refactor billing' done, and 'build auth feature' working with its nested children 'write integration tests' and 'api docs' ready for review — each showing its agent, model, context size, and account usage, above collapsed Orchestrators and Stashed sections." loading="lazy">
       </div>
     </section>
 
@@ -337,7 +338,7 @@ maestro swap "$SID" --to codex              # switch the agent, keep the tab</co
   <section class="download" id="download">
     <div class="container">
       <h2>Get Maestro</h2>
-      <p class="req">macOS on Apple Silicon · v0.2.16</p>
+      <p class="req">macOS on Apple Silicon · v0.2.27</p>
       <pre class="code-block"><code>curl -fsSL https://maestroterminal.com/install.sh | sh</code></pre>
       <a class="btn btn-primary" href="https://github.com/coldstar96/maestro-releases/releases/latest/download/Maestro-arm64.dmg">Download Maestro-arm64.dmg</a>
       <p class="btn-note">Signed &amp; notarized — launches straight from the dmg, no Gatekeeper prompt, and auto-updates itself after that. <a href="https://github.com/coldstar96/maestro-releases/releases">all releases</a></p>

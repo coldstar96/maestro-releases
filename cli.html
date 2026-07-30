@@ -34,6 +34,7 @@
         <a href="#verb-open">open</a>
         <a href="#verb-focus">focus</a>
         <a href="#verb-send">send</a>
+        <a href="#verb-parked">parked</a>
         <a href="#verb-send-key">send-key</a>
         <a href="#verb-archive">archive</a>
         <a href="#verb-delete">delete</a>
@@ -47,6 +48,7 @@
         <a href="#verb-panel">panel</a>
         <a href="#verb-open-file">open-file</a>
         <a href="#verb-web-clear">web-clear</a>
+        <a href="#verb-web-login">web-login</a>
         <a href="#verb-move">move</a>
         <a href="#verb-move-project">move-project</a>
         <a href="#verb-duplicate-window">duplicate-window</a>
@@ -63,7 +65,8 @@
         <a href="#verb-card">card</a>
         <a href="#verb-snooze">snooze</a>
         <a href="#verb-job-set">job-set</a>
-        <a href="#verb-pr-set">pr-set / mark-merged</a>
+        <a href="#verb-state-set">state-set</a>
+        <a href="#verb-pill-color">pill-color</a>
         <a href="#verb-link">links</a>
         <div class="nav-group">Agents &amp; accounts</div>
         <a href="#verb-swap">swap</a>
@@ -79,8 +82,10 @@
         <a href="#verb-timeline">timeline</a>
         <a href="#verb-ext">ext</a>
         <div class="nav-group">Maintenance</div>
+        <a href="#verb-ps">ps</a>
         <a href="#verb-report">report / bug-report</a>
         <a href="#verb-reap">reap</a>
+        <a href="#verb-render-mark">render-mark</a>
         <div class="nav-group">More</div>
         <a href="#examples">Examples</a>
       </nav>
@@ -106,13 +111,14 @@ maestro wait "$SID" --until idle</code></pre>
         <h2 id="verbs-sessions">Sessions</h2>
 
         <div class="verb" id="verb-list">
-          <h3>maestro list <span class="opt">[--archived | --closed]</span></h3>
-          <p>Live sessions as JSON (<code>id, title, kind, status, cwd, parentId, windowId</code>). <code>--archived</code> lists archived (shelved) sessions instead; <code>--closed</code> lists recently-closed sessions (tombstones) instead, newest first.</p>
-          <pre class="code-block"><code>maestro list | jq '.[] | {id, title, status}'</code></pre>
+          <h3>maestro list <span class="opt">[&lt;target&gt;] [--full] [--limit &lt;n&gt;] [--archived | --closed]</span></h3>
+          <p>Live sessions as JSON (<code>id, title, kind, status, cwd, parentId, windowId</code>). Pass a <code>&lt;target&gt;</code> to narrow it to one session. <code>--full</code> widens each row with the session detail: job and state labels, work context (branch, dirty, projectRoot, statusReason, timestamps), the attached agent (kind, origin, pid, configHome, agentSessionId), model, accountId, contextTokens, links, and lifecycle flags. <code>--limit &lt;n&gt;</code> caps the rows returned. <code>--archived</code> lists archived (shelved) sessions instead; <code>--closed</code> lists recently-closed sessions (tombstones) instead, newest first.</p>
+          <pre class="code-block"><code>maestro list | jq '.[] | {id, title, status}'
+maestro list "$SID" --full            # everything known about one session</code></pre>
         </div>
 
         <div class="verb" id="verb-open">
-          <h3>maestro open --kind &lt;claude|codex|opencode|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;] [--prompt "&lt;task&gt;"] [--model &lt;id|@user&gt;] [--permission-mode &lt;mode|@user&gt;]</span></h3>
+          <h3>maestro open --kind &lt;claude|codex|opencode|shell&gt; <span class="opt">[--child|--sibling] [--cwd &lt;dir&gt;] [--parent &lt;id&gt;] [--title &lt;t&gt;] [--prompt "&lt;task&gt;"] [--model &lt;id|@user&gt;]</span></h3>
           <p>Open a new session and print its id. By default it inherits the cwd of the tab the command ran in — pass <code>--cwd</code> to override, or run from outside maestro to start in your home directory.</p>
           <ul class="flags">
             <li><code>--kind</code> claude, codex, opencode, or shell (default shell)</li>
@@ -122,7 +128,6 @@ maestro wait "$SID" --until idle</code></pre>
             <li><code>--title &lt;t&gt;</code> tab title</li>
             <li><code>--prompt "&lt;task&gt;"</code> seeds an agent (claude/codex/opencode) with its first task at spawn — one command, no follow-up <code>send</code>.</li>
             <li><code>--model &lt;id|@user&gt;</code> agent model for this session — an id, <code>@user</code> to match your own CLI default, or <code>""</code> for the agent's native default</li>
-            <li><code>--permission-mode &lt;mode|@user&gt;</code> claude interaction mode: <code>default</code>, <code>acceptEdits</code>, <code>plan</code>, <code>bypassPermissions</code>, or <code>@user</code></li>
           </ul>
           <pre class="code-block"><code>SID=$(maestro open --kind claude --child --prompt "run the api tests and fix failures")</code></pre>
         </div>
@@ -135,10 +140,20 @@ maestro focus --back</code></pre>
         </div>
 
         <div class="verb" id="verb-send">
-          <h3>maestro send &lt;target&gt; "&lt;text&gt;" <span class="opt">[--no-enter]</span></h3>
+          <h3>maestro send &lt;target&gt; "&lt;text&gt;" <span class="opt">[--no-enter] [--force]</span></h3>
           <p>Type text into a session's terminal <strong>and press Enter to submit it</strong> — one call. Pass <code>--no-enter</code> to type without submitting, for staging input that the user (or a later key) will complete.</p>
+          <p>If the target's agent composer already holds text the user was typing, the message is <strong>parked</strong> rather than delivered — merging the two would submit their unfinished prompt as part of yours. The reply carries <code>{delivered:false, parked:true, queued:n}</code>, and it goes out when the user submits their own prompt or clicks &ldquo;send now&rdquo;. <code>--force</code> jumps the queue instead of waiting behind it, stashing the draft into the agent's own kill ring so the message lands alone. When a draft can't be stashed <em>and given back</em> — the agent has no kill ring, or the draft spans more rows than it returns intact — even a forced send parks.</p>
           <pre class="code-block"><code>maestro send "$SID" "npm test"
-maestro send "$SID" "npm test" --no-enter   # stage it, don't run it</code></pre>
+maestro send "$SID" "npm test" --no-enter   # stage it, don't run it
+maestro send "$SID" "stop and revert" --force</code></pre>
+        </div>
+
+        <div class="verb" id="verb-parked">
+          <h3>maestro parked &lt;target&gt; <span class="opt">[--flush | --drop]</span></h3>
+          <p>Inspect or release messages parked for a session. With no flag it returns the queue as JSON metadata (<code>from, at, bytes</code>) oldest first — <strong>never the message text</strong>. <code>--flush</code> delivers the whole queue in arrival order right now; <code>--drop</code> discards it.</p>
+          <p>A <code>--flush</code> answers <code>{flushed:0, held:"draft-too-tall"|"no-kill-ring"}</code> when the draft in the composer can't be stashed and handed back — releasing would submit that draft along with the messages, so they stay queued and go out once the composer is empty. Parked messages are never delivered on a timer and do not survive an app restart.</p>
+          <pre class="code-block"><code>maestro parked "$SID"            # what's waiting, and since when
+maestro parked "$SID" --flush    # let it all through now</code></pre>
         </div>
 
         <div class="verb" id="verb-send-key">
@@ -176,20 +191,20 @@ maestro focus "$SID"</code></pre>
 
         <div class="verb" id="verb-wait">
           <h3>maestro wait &lt;target&gt; --until &lt;status&gt; <span class="opt">| --until-not &lt;status&gt; [--timeout &lt;s&gt;]</span></h3>
-          <p>Block until a session's status matches (<code>--until</code>) or stops matching (<code>--until-not</code>) a status — <code>working</code>, <code>idle</code>, <code>waiting</code>, <code>compacting</code> — then return JSON <code>{matched, timedOut, finalStatus, waitedMs}</code>. If the session is removed, archived, or exits while waiting, it returns immediately with <code>{matched:false, gone:true}</code> rather than hanging. <code>--timeout</code> is in seconds; <code>0</code> waits forever; the default is 300s.</p>
+          <p>Block until a session's status matches (<code>--until</code>) or stops matching (<code>--until-not</code>) a status — <code>working</code>, <code>idle</code>, <code>done</code>, <code>compacting</code> — then return JSON <code>{matched, timedOut, finalStatus, waitedMs}</code>. If the session is removed, archived, or exits while waiting, it returns immediately with <code>{matched:false, gone:true}</code> rather than hanging. <code>--timeout</code> is in seconds; <code>0</code> waits forever; the default is 300s.</p>
           <pre class="code-block"><code>maestro wait "$SID" --until idle --timeout 120</code></pre>
         </div>
 
         <div class="verb" id="verb-compact">
-          <h3>maestro compact &lt;target&gt; <span class="opt">[--then-send "&lt;text&gt;"]</span></h3>
-          <p>Submit <code>/compact</code> to a session, wait (event-driven) for the compaction to finish, then optionally submit a follow-up — one deterministic call instead of sending <code>/compact</code> and polling for it to settle. Returns JSON <code>{compacted, timedOut, sentFollowup, finalStatus, waitedMs}</code>. When the target is the calling session itself, the sequence runs detached and the call returns <code>{detached:true, target, willSend}</code> immediately, since a session can't wait on its own turn ending.</p>
+          <h3>maestro compact &lt;target&gt; <span class="opt">[instructions...] [--then-send "&lt;text&gt;"]</span></h3>
+          <p>Trailing words are passed through to <code>/compact</code> as its instructions, so you can steer what the summary keeps. Submit <code>/compact</code> to a session, wait (event-driven) for the compaction to finish, then optionally submit a follow-up — one deterministic call instead of sending <code>/compact</code> and polling for it to settle. Returns JSON <code>{compacted, timedOut, sentFollowup, finalStatus, waitedMs}</code>. When the target is the calling session itself, the sequence runs detached and the call returns <code>{detached:true, target, willSend}</code> immediately, since a session can't wait on its own turn ending.</p>
           <pre class="code-block"><code>maestro compact "$MAESTRO_SESSION_ID" --then-send "continue where you left off"</code></pre>
         </div>
 
         <div class="verb" id="verb-status-set">
           <h3>maestro status-set &lt;target&gt; &lt;status&gt; <span class="opt">[--reason &lt;text&gt;]</span></h3>
-          <p>Manually override a session's status (e.g. <code>working</code>, <code>waiting</code>, <code>idle</code>). Mostly for scripting and testing.</p>
-          <pre class="code-block"><code>maestro status-set "$SID" waiting --reason "needs review"</code></pre>
+          <p>Manually override a session's status (e.g. <code>working</code>, <code>review</code>, <code>idle</code>). Mostly for scripting and testing.</p>
+          <pre class="code-block"><code>maestro status-set "$SID" review --reason "needs review"</code></pre>
         </div>
 
         <h2 id="verbs-layout">Layout &amp; windows</h2>
@@ -223,6 +238,14 @@ maestro focus "$SID"</code></pre>
           <pre class="code-block"><code>maestro web-clear</code></pre>
         </div>
 
+        <div class="verb" id="verb-web-login">
+          <h3>maestro web-login &lt;url&gt; <span class="opt">| --done | --forget [domain]</span></h3>
+          <p>Sign in to a site for the side panel using a <strong>real Chrome</strong>. Google blocks sign-in inside the embedded browser, so this opens a maestro-owned Chrome window, mirrors that site's cookies into the panel while you sign in, and stops when you finish — click &ldquo;I've signed in&rdquo; in the panel dialog, or just close the Chrome window. Only the target site's own cookies are copied, never your identity provider's.</p>
+          <p>Starting a url this way needs confirmation in the focused maestro window: that browser carries your live sign-in session, so the app asks before pointing it anywhere, and refuses when no maestro window is focused. <code>--done</code> finishes the running handoff from the terminal, needing no confirmation since the handoff was already approved. <code>--forget &lt;domain&gt;</code> wipes just that site's mirrored cookies; <code>--forget</code> with no domain wipes the sign-in profile <em>and</em> every cookie in the panel's shared browsing profile.</p>
+          <pre class="code-block"><code>maestro web-login https://app.example.com
+maestro web-login --done</code></pre>
+        </div>
+
         <div class="verb" id="verb-move">
           <h3>maestro move &lt;target&gt; <span class="opt">[up|down] [--before &lt;id&gt;] [--after &lt;id&gt;] [--child-of &lt;id&gt;] [--promote] [--to-window &lt;id&gt;] [--new-window] [--project &lt;dir&gt;]</span></h3>
           <p>Reorder or re-parent a session, or move it to another/new window.</p>
@@ -251,7 +274,7 @@ maestro focus "$SID"</code></pre>
 
         <div class="verb" id="verb-rename">
           <h3>maestro rename &lt;target&gt; "&lt;title&gt;" <span class="opt">| --clear</span></h3>
-          <p>Set a session's custom title. <code>--clear</code> (or an empty title) reverts to the auto-derived one.</p>
+          <p>Set a session's custom title. <code>--clear</code> (or an empty title) reverts to the auto-derived one. A name maestro generated itself (<code>shell</code>, or the attached agent's kind) is refused as a pin, so a placeholder can never block the real derived title from landing — the reply reports <code>pinned</code> so you can tell which happened.</p>
           <pre class="code-block"><code>maestro rename "$MAESTRO_SESSION_ID" "api tests"</code></pre>
         </div>
 
@@ -313,15 +336,22 @@ maestro unstash "$SID"</code></pre>
         </div>
 
         <div class="verb" id="verb-job-set">
-          <h3>maestro job-set &lt;target&gt; &lt;code|action|info&gt;</h3>
-          <p>Override a session's inferred job classification — <code>code</code> (edited source), <code>action</code> (ran things), or <code>info</code> (investigation). Shows as a tag on the card.</p>
-          <pre class="code-block"><code>maestro job-set "$SID" code</code></pre>
+          <h3>maestro job-set &lt;target&gt; &lt;name&gt; <span class="opt">| --clear</span></h3>
+          <p>Label what a session is working on. The name is free text — call it whatever the work actually is — and shows as a pill on the card, coloured by a stable hash of the name, so the same job always looks the same. Nothing is inferred: jobs and states are only ever set by you (or an agent on your behalf). <code>--clear</code> removes the label.</p>
+          <pre class="code-block"><code>maestro job-set "$SID" code
+maestro job-set "$SID" release</code></pre>
         </div>
 
-        <div class="verb" id="verb-pr-set">
-          <h3>maestro pr-set &lt;target&gt; &lt;number|url&gt; &nbsp;·&nbsp; maestro mark-merged &lt;target&gt;</h3>
-          <p><code>pr-set</code> attaches a pull request to a session (a bare number resolves via the git <code>origin</code> remote); it shows as a <code>#NNN</code> link on the card. <code>mark-merged</code> marks a code session's change as merged for when <code>gh</code> can't detect the PR.</p>
-          <pre class="code-block"><code>maestro pr-set "$SID" 482</code></pre>
+        <div class="verb" id="verb-state-set">
+          <h3>maestro state-set &lt;target&gt; &lt;text&gt; <span class="opt">| --clear</span></h3>
+          <p>Override the state label shown after a session's job pill — free text for the phase happening right now (e.g. <code>plan review</code>, <code>blocked</code>). <code>--clear</code> removes it.</p>
+          <pre class="code-block"><code>maestro state-set "$MAESTRO_SESSION_ID" "code review"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-pill-color">
+          <h3>maestro pill-color &lt;target&gt; "&lt;#hex&gt;" <span class="opt">| --clear</span></h3>
+          <p>Set a per-session colour for the job/state pill, overriding the name-derived default. <strong>Quote the hex</strong> — an unquoted <code>#</code> starts a shell comment. <code>--clear</code> reverts to the automatic colour.</p>
+          <pre class="code-block"><code>maestro pill-color "$SID" "#ffffff"</code></pre>
         </div>
 
         <div class="verb" id="verb-link">
@@ -340,7 +370,7 @@ maestro link-add "$SID" ticket https://linear.app/x/ENG-482</code></pre>
         <h2 id="verbs-agents">Agents &amp; accounts</h2>
 
         <div class="verb" id="verb-swap">
-          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex|opencode] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--account &lt;id&gt;|user|auto] [--force] | --handoff-auto [--include "&lt;text&gt;"]</span></h3>
+          <h3>maestro swap &lt;target&gt; --resume &lt;agentSessionId&gt; <span class="opt">| [--to claude|codex|opencode|kimi] [--model &lt;m&gt;] [--handoff &lt;file&gt;] [--account &lt;id&gt;|user|auto] [--force] | --handoff-auto [--include "&lt;text&gt;"]</span></h3>
           <p>Replace the agent running in a tab <strong>in place</strong> (same tab id/position).</p>
           <ul class="flags">
             <li><code>--resume &lt;id&gt;</code> continues an existing claude/codex/opencode conversation; otherwise a fresh agent boots</li>
@@ -355,8 +385,8 @@ maestro swap "$SID" --handoff-auto --to claude --include "focus on the retry log
         </div>
 
         <div class="verb" id="verb-accounts">
-          <h3>maestro accounts &lt;list | add | reauth | remove | rename | color | strategy | use | usage | refresh&gt;</h3>
-          <p>Manage claude/codex login accounts.</p>
+          <h3>maestro accounts &lt;list | add | reauth | remove | rename | color | strategy | use | usage | refresh | capacity | cancel-login&gt;</h3>
+          <p>Manage claude/codex/kimi login accounts.</p>
           <ul class="flags">
             <li><code>list</code> every account with nickname, login state, limit state</li>
             <li><code>add [--nickname &lt;n&gt;] [--provider &lt;claude|codex&gt;]</code> opens a login session and watches for the completed <code>/login</code> (default provider: claude)</li>
@@ -366,6 +396,8 @@ maestro swap "$SID" --handoff-auto --to claude --include "focus on the retry log
             <li><code>strategy &lt;useEvenly|mostAvailable5h|mostAvailable7d|sequential|rotate|ask&gt;</code> how a new agent session picks an account</li>
             <li><code>use &lt;id&gt;</code> sets the active account</li>
             <li><code>usage [--refresh]</code> each account's usage window · <code>refresh [id]</code> re-polls usage and renews a near-expiry token</li>
+            <li><code>capacity [--provider &lt;claude|codex|kimi&gt;]</code> headroom across the fleet, for deciding whether there's room to start more work</li>
+            <li><code>cancel-login &lt;sessionId&gt;</code> abandons an in-flight login session</li>
           </ul>
           <pre class="code-block"><code>maestro accounts list
 maestro accounts strategy mostAvailable5h</code></pre>
@@ -425,6 +457,19 @@ maestro settings set terminal.fontSize 14</code></pre>
         </div>
 
         <h2 id="verbs-maintenance">Maintenance</h2>
+
+        <div class="verb" id="verb-ps">
+          <h3>maestro ps</h3>
+          <p>Per-session CPU and memory as JSON, one row per non-archived session, sorted by CPU descending: <code>id, title, cpu, rssMb, adopted, floor, measured</code>. <code>cpu</code> is a percent summed per core like <code>top</code> — <code>312</code> means about 3.1 cores.</p>
+          <p>It reports honestly rather than guessing. <code>measured:false</code> means the session couldn't be sampled — <code>cpu</code>/<code>rssMb</code> are null, the row sorts last, and a <code>reason</code> says why: <code>dormant</code> (asleep, nothing running), <code>exited</code>, <code>no-readings</code>, or <code>unsampled</code>. On a measured row <code>cpu</code> is still null after only one sample, since the figure is a delta between two. <code>rssMb</code> sums the whole process tree and so double-counts shared pages — treat it as an over-estimate. <code>adopted</code> is non-null when part of the figure comes from a build daemon outside the session's own tree (a Bazel server reparented to PID 1) that this session is waiting on, split evenly when several sessions share one. <code>floor</code> is true when the number is a lower bound, because the session churned through processes that started and finished between samples.</p>
+          <pre class="code-block"><code>maestro ps | jq '.[] | select(.measured) | {title, cpu, rssMb}'</code></pre>
+        </div>
+
+        <div class="verb" id="verb-render-mark">
+          <h3>maestro render-mark <span class="opt">[&lt;target&gt;] [--note &lt;text&gt;]</span></h3>
+          <p>Drop a timestamped marker into the logs the instant you see a terminal-rendering glitch (garbled or scrambled glyphs), so the surrounding renderer diagnostics can be read backwards from it. Run it from another terminal without touching the affected window. Set <code>logging.level</code> to <code>debug</code> to capture the surrounding detail.</p>
+          <pre class="code-block"><code>maestro render-mark --note "garble after scrolling back"</code></pre>
+        </div>
 
         <div class="verb" id="verb-report">
           <h3>maestro bug-report "&lt;what happened&gt;" &nbsp;·&nbsp; maestro report --type bug|feedback --text "&lt;message&gt;"</h3>
