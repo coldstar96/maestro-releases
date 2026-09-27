@@ -70,6 +70,8 @@
         <a href="#verb-link">links</a>
         <div class="nav-group">Agents &amp; accounts</div>
         <a href="#verb-swap">swap</a>
+        <a href="#verb-restart-agents">restart-agents</a>
+        <a href="#verb-agent-view">agent-view</a>
         <a href="#verb-accounts">accounts</a>
         <div class="nav-group">Config &amp; lookup</div>
         <a href="#verb-settings">settings</a>
@@ -382,6 +384,29 @@ maestro link-add "$SID" ticket https://linear.app/x/ENG-482</code></pre>
           <p>The outgoing conversation is tombstoned — <code>reopen</code> or ⌘Z restores it.</p>
           <pre class="code-block"><code>maestro swap "$SID" --to codex --model gpt-5
 maestro swap "$SID" --handoff-auto --to claude --include "focus on the retry logic"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-restart-agents">
+          <h3>maestro restart-agents &lt;target&gt; <span class="opt">| --all [--accounts keep|auto] [--dry-run]</span></h3>
+          <p>Relaunch agents <strong>in place</strong> (same tab id/position), resuming each conversation. A session that was mid-turn is sent <code>continue</code> once its agent is back, so interrupted work carries on.</p>
+          <ul class="flags">
+            <li><code>--all</code> restarts every live agent session across all windows and providers, except the one running the command (name it as <code>&lt;target&gt;</code> to include it)</li>
+            <li><code>--accounts keep</code> (default) keeps each session on its current config home; <code>auto</code> re-picks the account by the configured strategy for account-bound sessions</li>
+            <li><code>--dry-run</code> reports what would happen without touching anything</li>
+          </ul>
+          <p>Sleeping (dormant, archived, stashed, snoozed), exited and mid-login tabs and plain shells are skipped. Returns JSON <code>{restarted, continued, skipped, failed}</code>.</p>
+          <pre class="code-block"><code>maestro restart-agents --all --dry-run
+maestro restart-agents "$SID"</code></pre>
+        </div>
+
+        <div class="verb" id="verb-agent-view">
+          <h3>maestro agent-view &lt;target&gt; &lt;terminal|native&gt; <span class="opt">| --default &lt;terminal|native&gt;</span></h3>
+          <p>Show an agent session as the agent's own terminal UI or as maestro's native transcript view. Switching relaunches the agent under the same conversation.</p>
+          <ul class="flags">
+            <li><code>--default</code> sets what new sessions start with; the last per-session choice also becomes the default</li>
+          </ul>
+          <pre class="code-block"><code>maestro agent-view "$SID" native
+maestro agent-view --default terminal</code></pre>
         </div>
 
         <div class="verb" id="verb-accounts">
