@@ -64,6 +64,7 @@
         <a href="#verb-color">color</a>
         <a href="#verb-card">card</a>
         <a href="#verb-snooze">snooze</a>
+        <a href="#verb-hold">hold</a>
         <a href="#verb-job-set">job-set</a>
         <a href="#verb-state-set">state-set</a>
         <a href="#verb-pill-color">pill-color</a>
@@ -337,6 +338,13 @@ maestro unstash "$SID"</code></pre>
           <pre class="code-block"><code>maestro snooze "$SID" --for 1h30m</code></pre>
         </div>
 
+        <div class="verb" id="verb-hold">
+          <h3>maestro hold &lt;target&gt; <span class="opt">[--clear]</span></h3>
+          <p>Put a session On hold. In Recency/Status sort it moves to the collapsible <em>On hold</em> sidebar section at the bottom; in Manual/Title sort it stays in place, dimmed. The session keeps running and still shows status and unread. Nothing releases it except <code>--clear</code> or the menu.</p>
+          <pre class="code-block"><code>maestro hold "$SID"
+maestro hold "$SID" --clear</code></pre>
+        </div>
+
         <div class="verb" id="verb-job-set">
           <h3>maestro job-set &lt;target&gt; &lt;name&gt; <span class="opt">| --clear</span></h3>
           <p>Label what a session is working on. The name is free text — call it whatever the work actually is — and shows as a pill on the card, coloured by a stable hash of the name, so the same job always looks the same. Nothing is inferred: jobs and states are only ever set by you (or an agent on your behalf). <code>--clear</code> removes the label.</p>
@@ -413,9 +421,9 @@ maestro agent-view --default terminal</code></pre>
           <h3>maestro accounts &lt;list | add | reauth | remove | rename | color | strategy | use | usage | refresh | capacity | cancel-login&gt;</h3>
           <p>Manage claude/codex/kimi login accounts.</p>
           <ul class="flags">
-            <li><code>list</code> every account with nickname, login state, limit state</li>
+            <li><code>list</code> every account with nickname, login state, limit state, and when a claude login expires (<code>loginExpiresAt</code>)</li>
             <li><code>add [--nickname &lt;n&gt;] [--provider &lt;claude|codex&gt;]</code> opens a login session and watches for the completed <code>/login</code> (default provider: claude)</li>
-            <li><code>reauth &lt;id&gt;</code> re-authenticates an existing account in place — opens a login session against its own home, no new account created</li>
+            <li><code>reauth &lt;id&gt;</code> re-authenticates an existing account in place — opens a login session against its own home, no new account created; also brings back a signed-out account still used by open sessions</li>
             <li><code>remove &lt;id&gt; [--force] [--migrate]</code> deletes an account (<code>--force</code> if a session still uses it)</li>
             <li><code>rename &lt;id&gt; "&lt;nickname&gt;"</code> · <code>color &lt;id&gt; &lt;hex&gt;</code> set the nickname/swatch</li>
             <li><code>strategy &lt;useEvenly|mostAvailable5h|mostAvailable7d|sequential|rotate|ask&gt;</code> how a new agent session picks an account</li>
