@@ -46,6 +46,8 @@
         <div class="nav-group">Layout &amp; windows</div>
         <a href="#verb-split">split</a>
         <a href="#verb-panel">panel</a>
+        <a href="#verb-layout">layout</a>
+        <a href="#verb-widget">widget</a>
         <a href="#verb-open-file">open-file</a>
         <a href="#verb-web-clear">web-clear</a>
         <a href="#verb-web-login">web-login</a>
@@ -220,13 +222,39 @@ maestro focus "$SID"</code></pre>
 
         <div class="verb" id="verb-panel">
           <h3>maestro panel &lt;target&gt; <span class="opt">[--url &lt;url&gt;] [--off] [--close-view &lt;id&gt;] [--reopen-view]</span></h3>
-          <p>Open the session's side panel — by default a live web preview (the dev-server URL is auto-detected, or set one with <code>--url</code>). The panel is tabbed and holds web previews and code-editor views side by side.</p>
+          <p>Open the session's side panel — by default a live web preview (the dev-server URL is auto-detected, or set one with <code>--url</code>; each URL gets its own tab). It never steals focus. The panel is tabbed and holds web previews and code-editor views side by side.</p>
           <ul class="flags">
             <li><code>--off</code> hides the panel</li>
             <li><code>--close-view &lt;id&gt;</code> closes a specific panel tab (a <code>code-editor#&lt;path&gt;</code> or web-preview instance id)</li>
             <li><code>--reopen-view</code> reopens the last pane tab closed for the session (LIFO)</li>
           </ul>
           <pre class="code-block"><code>maestro panel "$SID" --url http://localhost:5173</code></pre>
+        </div>
+
+        <div class="verb" id="verb-layout">
+          <h3>maestro layout <span class="opt">show | move | split | toggle | reset | preset | size</span></h3>
+          <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code>, or a panel view id.</p>
+          <ul class="flags">
+            <li><code>show [--json]</code> prints zones, groups and views</li>
+            <li><code>move &lt;view&gt; --to &lt;left|right|bottom|center[:&lt;i.j&gt;]&gt;</code> docks a view; <code>split &lt;view&gt; --edge &lt;left|right|top|bottom&gt;</code> opens a new group</li>
+            <li><code>toggle &lt;zone&gt; [--off]</code>, <code>reset</code>, <code>preset &lt;default|terminals-bottom|sidebar-right&gt;</code></li>
+            <li><code>size &lt;zone&gt; &lt;px&gt;</code> or <code>size &lt;address|view&gt; &lt;a,b,...&gt;</code> sets zone and split sizes</li>
+          </ul>
+          <pre class="code-block"><code>maestro layout preset terminals-bottom
+maestro layout size right 480</code></pre>
+        </div>
+
+        <div class="verb" id="verb-widget">
+          <h3>maestro widget <span class="opt">list | show | hide | layout | data | new | reload</span></h3>
+          <p>Panel widgets are HTML pages (a folder under <code>&lt;MAESTRO_HOME&gt;/widgets/&lt;name&gt;/</code>) shown as cards on a session's Widgets board, with live per-session data.</p>
+          <ul class="flags">
+            <li><code>show [&lt;target&gt;] &lt;name&gt;</code> / <code>hide</code> add or remove a card</li>
+            <li><code>layout [&lt;target&gt;] [--set &lt;json|file|-&gt;]</code> prints or replaces the board</li>
+            <li><code>data [&lt;target&gt;] &lt;name&gt; --set k=v</code> pushes data the page receives via <code>maestro.onData</code></li>
+            <li><code>new &lt;name&gt;</code> scaffolds a widget; <code>reload</code> rescans</li>
+          </ul>
+          <pre class="code-block"><code>maestro widget new status
+maestro widget show status</code></pre>
         </div>
 
         <div class="verb" id="verb-open-file">
