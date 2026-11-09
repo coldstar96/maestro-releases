@@ -232,12 +232,12 @@ maestro focus "$SID"</code></pre>
         </div>
 
         <div class="verb" id="verb-layout">
-          <h3>maestro layout <span class="opt">show | move | split | toggle | reset | preset | size</span></h3>
-          <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code>, or a panel view id.</p>
+          <h3>maestro layout <span class="opt">show | move | split | toggle | collapse | hide | reset | preset | size</span></h3>
+          <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code>, <code>field</code> (the maestro field), or a panel view id.</p>
           <ul class="flags">
             <li><code>show [--json]</code> prints zones, groups and views</li>
             <li><code>move &lt;view&gt; --to &lt;left|right|bottom|center[:&lt;i.j&gt;]&gt;</code> docks a view; <code>split &lt;view&gt; --edge &lt;left|right|top|bottom&gt;</code> opens a new group</li>
-            <li><code>toggle &lt;zone&gt; [--off]</code>, <code>reset</code>, <code>preset &lt;default|terminals-bottom|sidebar-right&gt;</code></li>
+            <li><code>toggle &lt;zone&gt; [--off]</code>, <code>collapse &lt;view&gt; [--off]</code> folds a group to its header, <code>hide &lt;view&gt;</code> removes a view such as stash or onHold, <code>reset</code>, <code>preset &lt;default|terminals-bottom|sidebar-right&gt;</code></li>
             <li><code>size &lt;zone&gt; &lt;px&gt;</code> or <code>size &lt;address|view&gt; &lt;a,b,...&gt;</code> sets zone and split sizes</li>
           </ul>
           <pre class="code-block"><code>maestro layout preset terminals-bottom
@@ -368,7 +368,7 @@ maestro unstash "$SID"</code></pre>
 
         <div class="verb" id="verb-hold">
           <h3>maestro hold &lt;target&gt; <span class="opt">[--clear]</span></h3>
-          <p>Put a session On hold. In Recency/Status sort it moves to the collapsible <em>On hold</em> sidebar section at the bottom; in Manual/Title sort it stays in place, dimmed. The session keeps running and still shows status and unread. Nothing releases it except <code>--clear</code> or the menu.</p>
+          <p>Put a session On hold. It appears in the <em>On hold</em> tab of the left dock in every sort mode and leaves the Cmd+1..9 and prev/next order. The session keeps running and still shows status and unread. It is released automatically when its agent starts working, asks a question or needs permission, or with <code>--clear</code>.</p>
           <pre class="code-block"><code>maestro hold "$SID"
 maestro hold "$SID" --clear</code></pre>
         </div>
