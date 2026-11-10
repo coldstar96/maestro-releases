@@ -45,6 +45,7 @@
         <a href="#verb-status-set">status-set</a>
         <div class="nav-group">Layout &amp; windows</div>
         <a href="#verb-split">split</a>
+        <a href="#verb-detach-pane">detach-pane</a>
         <a href="#verb-panel">panel</a>
         <a href="#verb-layout">layout</a>
         <a href="#verb-widget">widget</a>
@@ -71,6 +72,7 @@
         <a href="#verb-state-set">state-set</a>
         <a href="#verb-pill-color">pill-color</a>
         <a href="#verb-link">links</a>
+        <a href="#verb-card">card</a>
         <div class="nav-group">Agents &amp; accounts</div>
         <a href="#verb-swap">swap</a>
         <a href="#verb-restart-agents">restart-agents</a>
@@ -218,6 +220,13 @@ maestro focus "$SID"</code></pre>
           <h3>maestro split &lt;target&gt; <span class="opt">[--down]</span></h3>
           <p>Split a tab into panes (tmux-style): spawns a shell pane beside <code>&lt;target&gt;</code> (below with <code>--down</code>).</p>
           <pre class="code-block"><code>maestro split "$MAESTRO_SESSION_ID" --down</code></pre>
+        </div>
+
+        <div class="verb" id="verb-detach-pane">
+          <h3>maestro detach-pane &lt;target&gt; <span class="opt">[--to &lt;session&gt;]</span></h3>
+          <p>Move a hosted shell tab/pane out of its host into its own top-level session card, placed right after the host; with <code>--to &lt;session&gt;</code> move it into that other session as a new tab instead. Fails for a session that is not a hosted pane.</p>
+          <pre class="code-block"><code>maestro detach-pane "$SID"
+maestro detach-pane "$SID" --to "$OTHER"</code></pre>
         </div>
 
         <div class="verb" id="verb-tab">
@@ -409,6 +418,14 @@ maestro job-set "$SID" release</code></pre>
           </ul>
           <pre class="code-block"><code>maestro link-add "$SID" preview https://pr-482.preview.app
 maestro link-add "$SID" ticket https://linear.app/x/ENG-482</code></pre>
+        </div>
+
+        <div class="verb" id="verb-card">
+          <h3>maestro card <span class="opt">list [--json] | new &lt;name&gt; | set [&lt;target&gt;] &lt;name|default&gt; | reload [&lt;name&gt;]</span></h3>
+          <p>Custom session card themes (sandboxed HTML/JS). <code>list</code> shows the built-in <code>default</code>, each folder under <code>&lt;MAESTRO_HOME&gt;/cards/&lt;name&gt;/</code> and extension-contributed themes, with title, chrome, height, network and any manifest error. <code>new</code> scaffolds a theme (<code>card.json</code> + <code>index.html</code> copied from the built-in one). <code>set</code> chooses the theme: with a <code>&lt;target&gt;</code> it sets that session's own override; with no target it sets the global <code>cards.theme</code> for every session without one; <code>default</code> clears it; unknown names are rejected. <code>reload</code> rescans one or every theme (edits are picked up automatically; this forces it).</p>
+          <pre class="code-block"><code>maestro card new compact-dark
+maestro card set compact-dark          # every session
+maestro card set "$SID" default        # one session back to the built-in card</code></pre>
         </div>
 
         <h2 id="verbs-agents">Agents &amp; accounts</h2>
