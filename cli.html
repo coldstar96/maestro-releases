@@ -220,6 +220,12 @@ maestro focus "$SID"</code></pre>
           <pre class="code-block"><code>maestro split "$MAESTRO_SESSION_ID" --down</code></pre>
         </div>
 
+        <div class="verb" id="verb-tab">
+          <h3>maestro tab &lt;target&gt; <span class="opt">[--select]</span></h3>
+          <p>Add a shell tab (with its own split layout, remembered per session) to <code>&lt;target&gt;</code>'s terminal group and activate it. <code>--select</code> activates the tab containing <code>&lt;target&gt;</code>. Each tab has a <code>tabId</code> and a <code>term:&lt;tabId&gt;</code> dock key, shown under <code>list --full</code> and <code>layout show</code>. Closing the last pane of a tab closes the tab; closing a session's last tab closes the session.</p>
+          <pre class="code-block"><code>maestro tab "$MAESTRO_SESSION_ID"</code></pre>
+        </div>
+
         <div class="verb" id="verb-panel">
           <h3>maestro panel &lt;target&gt; <span class="opt">[--url &lt;url&gt;] [--off] [--close-view &lt;id&gt;] [--reopen-view]</span></h3>
           <p>Open the session's side panel — by default a live web preview (the dev-server URL is auto-detected, or set one with <code>--url</code>; each URL gets its own tab). It never steals focus. The panel is tabbed and holds web previews and code-editor views side by side.</p>
@@ -233,7 +239,7 @@ maestro focus "$SID"</code></pre>
 
         <div class="verb" id="verb-layout">
           <h3>maestro layout <span class="opt">show | move | split | toggle | collapse | hide | reset | preset | size</span></h3>
-          <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code>, <code>field</code> (the maestro field), or a panel view id.</p>
+          <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code> (the terminal group, holding the focused session's <code>term:&lt;tabId&gt;</code> tabs), <code>field</code> (the maestro field), or a panel view id.</p>
           <ul class="flags">
             <li><code>show [--json]</code> prints zones, groups and views</li>
             <li><code>move &lt;view&gt; --to &lt;left|right|bottom|center[:&lt;i.j&gt;]&gt;</code> docks a view; <code>split &lt;view&gt; --edge &lt;left|right|top|bottom&gt;</code> opens a new group</li>
