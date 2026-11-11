@@ -46,6 +46,7 @@
         <div class="nav-group">Layout &amp; windows</div>
         <a href="#verb-split">split</a>
         <a href="#verb-detach-pane">detach-pane</a>
+        <a href="#verb-zoom">zoom</a>
         <a href="#verb-panel">panel</a>
         <a href="#verb-layout">layout</a>
         <a href="#verb-widget">widget</a>
@@ -235,6 +236,13 @@ maestro detach-pane "$SID" --to "$OTHER"</code></pre>
           <pre class="code-block"><code>maestro tab "$MAESTRO_SESSION_ID"</code></pre>
         </div>
 
+        <div class="verb" id="verb-zoom">
+          <h3>maestro zoom &lt;in|out|reset&gt; <span class="opt">[--view &lt;key&gt;] [&lt;target session&gt;]</span></h3>
+          <p>Zoom one dock view by a step (<code>in</code>/<code>out</code>) or back to 100% (<code>reset</code>), like Cmd+= / Cmd+- / Cmd+0 but for a single view. <code>--view</code> takes a view key as in <code>maestro layout show</code> (<code>term:&lt;tabId&gt;</code>, <code>code-editor</code>, …); the default is the target session's active terminal tab.</p>
+          <pre class="code-block"><code>maestro zoom in
+maestro zoom reset --view code-editor</code></pre>
+        </div>
+
         <div class="verb" id="verb-panel">
           <h3>maestro panel &lt;target&gt; <span class="opt">[--url &lt;url&gt;] [--off] [--close-view &lt;id&gt;] [--reopen-view]</span></h3>
           <p>Open the session's side panel — by default a live web preview (the dev-server URL is auto-detected, or set one with <code>--url</code>; each URL gets its own tab). It never steals focus. The panel is tabbed and holds web previews and code-editor views side by side.</p>
@@ -260,10 +268,11 @@ maestro layout size right 480</code></pre>
         </div>
 
         <div class="verb" id="verb-widget">
-          <h3>maestro widget <span class="opt">list | show | hide | layout | data | new | reload</span></h3>
+          <h3>maestro widget <span class="opt">list | show | hide | move | layout | data | new | reload</span></h3>
           <p>Panel widgets are HTML pages (a folder under <code>&lt;MAESTRO_HOME&gt;/widgets/&lt;name&gt;/</code>) shown as cards on a session's Widgets board, with live per-session data.</p>
           <ul class="flags">
             <li><code>show [&lt;target&gt;] &lt;name&gt;</code> / <code>hide</code> add or remove a card</li>
+            <li><code>move [&lt;target&gt;] &lt;name&gt; --to &lt;left|right|bottom|center|center:&lt;i.j&gt;|main&gt;</code> pulls one widget out of the board into its own dock tab at that zone; <code>--to main</code> returns it</li>
             <li><code>layout [&lt;target&gt;] [--set &lt;json|file|-&gt;]</code> prints or replaces the board</li>
             <li><code>data [&lt;target&gt;] &lt;name&gt; --set k=v</code> pushes data the page receives via <code>maestro.onData</code></li>
             <li><code>new &lt;name&gt;</code> scaffolds a widget; <code>reload</code> rescans</li>
