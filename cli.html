@@ -50,6 +50,7 @@
         <a href="#verb-panel">panel</a>
         <a href="#verb-layout">layout</a>
         <a href="#verb-widget">widget</a>
+        <a href="#verb-features">features</a>
         <a href="#verb-open-file">open-file</a>
         <a href="#verb-web-clear">web-clear</a>
         <a href="#verb-web-login">web-login</a>
@@ -279,6 +280,16 @@ maestro layout size right 480</code></pre>
           </ul>
           <pre class="code-block"><code>maestro widget new status
 maestro widget show status</code></pre>
+        </div>
+
+        <div class="verb" id="verb-features">
+          <h3>maestro features <span class="opt">[&lt;query&gt;] [--unused] [--area &lt;area&gt;] [--json]</span></h3>
+          <p>List Maestro's customization features, whether each is already in use, its goals, and how to apply or revert it.</p>
+          <ul class="flags">
+            <li><code>&lt;query&gt;</code> filters by title, goal or area; <code>--area</code> narrows to one area</li>
+            <li><code>--unused</code> hides features already in use; <code>--json</code> prints structured entries</li>
+          </ul>
+          <pre class="code-block"><code>maestro features --unused</code></pre>
         </div>
 
         <div class="verb" id="verb-open-file">
