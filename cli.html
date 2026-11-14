@@ -577,7 +577,7 @@ maestro settings set terminal.fontSize 14</code></pre>
 
         <div class="verb" id="verb-report">
           <h3>maestro bug-report "&lt;what happened&gt;" &nbsp;·&nbsp; maestro report --type bug|feedback --text "&lt;message&gt;"</h3>
-          <p><code>bug-report</code> spins up a run that reads logs, state, and version, then shows a paste-ready handoff in a copy popup. <code>report</code> does the same without the interactive field — <code>--type bug</code> runs the log investigation, <code>--type feedback</code> (the default) builds a lightweight description + environment report with no investigation.</p>
+          <p><code>bug-report</code> spins up a run that reads logs, state, and version, then shows a paste-ready handoff in a copy popup. Run it from any session (or have the orchestrator run it): the calling session is attached automatically, its agent transcript is read as evidence, and the popup opens in that window. <code>report</code> does the same without the interactive field — <code>--type bug</code> runs the log investigation, <code>--type feedback</code> (the default) builds a lightweight description + environment report with no investigation.</p>
           <pre class="code-block"><code>maestro report --type feedback --text "would love vertical split panes"</code></pre>
         </div>
 
