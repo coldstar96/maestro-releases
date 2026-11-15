@@ -50,6 +50,7 @@
         <a href="#verb-panel">panel</a>
         <a href="#verb-layout">layout</a>
         <a href="#verb-widget">widget</a>
+        <a href="#verb-artifacts">artifacts</a>
         <a href="#verb-features">features</a>
         <a href="#verb-open-file">open-file</a>
         <a href="#verb-web-clear">web-clear</a>
@@ -74,7 +75,7 @@
         <a href="#verb-state-set">state-set</a>
         <a href="#verb-pill-color">pill-color</a>
         <a href="#verb-link">links</a>
-        <a href="#verb-card">card</a>
+        <a href="#verb-card-theme">card (themes)</a>
         <div class="nav-group">Agents &amp; accounts</div>
         <a href="#verb-swap">swap</a>
         <a href="#verb-restart-agents">restart-agents</a>
@@ -282,6 +283,18 @@ maestro layout size right 480</code></pre>
 maestro widget show status</code></pre>
         </div>
 
+        <div class="verb" id="verb-artifacts">
+          <h3>maestro artifacts <span class="opt">[&lt;target&gt;] [--json] [--pinned] [--kind &lt;link|file|image|video|audio&gt;]… [--grep &lt;text&gt;] | artifacts pin|unpin [&lt;target&gt;] &lt;id|path|url&gt;</span></h3>
+          <p>List the artifacts an agent session produced: links it mentioned, files it wrote or edited, and images, videos or audio it made — the same list the built-in Artifacts widget shows. <code>&lt;target&gt;</code> defaults to this session. Plain output is a table of time, via (wrote/edited/mentioned), kind and target, with a star on pinned items.</p>
+          <ul class="flags">
+            <li><code>--kind</code> (repeatable), <code>--pinned</code> and <code>--grep</code> narrow the list</li>
+            <li><code>--json</code> prints the structured list; add <code>--since &lt;rev&gt;</code> to get <code>{unchanged:true}</code> when nothing changed</li>
+            <li><code>pin</code> / <code>unpin</code> keeps an item at the top and exempt from the size cap, addressed by its id, file path or url</li>
+          </ul>
+          <pre class="code-block"><code>maestro artifacts --kind image --kind video
+maestro artifacts pin "$SID" docs/design.md</code></pre>
+        </div>
+
         <div class="verb" id="verb-features">
           <h3>maestro features <span class="opt">[&lt;query&gt;] [--unused] [--area &lt;area&gt;] [--json]</span></h3>
           <p>List Maestro's customization features, whether each is already in use, its goals, and how to apply or revert it.</p>
@@ -440,7 +453,7 @@ maestro job-set "$SID" release</code></pre>
 maestro link-add "$SID" ticket https://linear.app/x/ENG-482</code></pre>
         </div>
 
-        <div class="verb" id="verb-card">
+        <div class="verb" id="verb-card-theme">
           <h3>maestro card <span class="opt">list [--json] | new &lt;name&gt; | set [&lt;target&gt;] &lt;name|default&gt; | reload [&lt;name&gt;]</span></h3>
           <p>Custom session card themes (sandboxed HTML/JS). <code>list</code> shows the built-in <code>default</code>, each folder under <code>&lt;MAESTRO_HOME&gt;/cards/&lt;name&gt;/</code> and extension-contributed themes, with title, chrome, height, network and any manifest error. <code>new</code> scaffolds a theme (<code>card.json</code> + <code>index.html</code> copied from the built-in one). <code>set</code> chooses the theme: with a <code>&lt;target&gt;</code> it sets that session's own override; with no target it sets the global <code>cards.theme</code> for every session without one; <code>default</code> clears it; unknown names are rejected. <code>reload</code> rescans one or every theme (edits are picked up automatically; this forces it).</p>
           <pre class="code-block"><code>maestro card new compact-dark
