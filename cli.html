@@ -257,13 +257,15 @@ maestro zoom reset --view code-editor</code></pre>
         </div>
 
         <div class="verb" id="verb-layout">
-          <h3>maestro layout <span class="opt">show | move | split | toggle | collapse | hide | reset | preset | size</span></h3>
+          <h3>maestro layout <span class="opt">show | move | split | toggle | collapse | hide | reset | preset | size | peek</span></h3>
           <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code> (the terminal group, holding the focused session's <code>term:&lt;tabId&gt;</code> tabs), <code>field</code> (the maestro field), or a panel view id.</p>
           <ul class="flags">
             <li><code>show [--json]</code> prints zones, groups and views</li>
             <li><code>move &lt;view&gt; --to &lt;left|right|bottom|center[:&lt;i.j&gt;]&gt;</code> docks a view; <code>split &lt;view&gt; --edge &lt;left|right|top|bottom&gt;</code> opens a new group</li>
             <li><code>toggle &lt;zone&gt; [--off]</code>, <code>collapse &lt;view&gt; [--off]</code> folds a group to its header, <code>hide &lt;view&gt;</code> removes a view such as stash or onHold, <code>reset</code>, <code>preset &lt;default|terminals-bottom|sidebar-right&gt;</code></li>
             <li><code>size &lt;zone&gt; &lt;px&gt;</code> or <code>size &lt;address|view&gt; &lt;a,b,...&gt;</code> sets zone and split sizes</li>
+            <li><code>size &lt;view&gt; --width &lt;px&gt;</code> pins the column holding a view to a fixed width (60-8000); the terminal column takes the rest</li>
+            <li><code>peek &lt;left|right|bottom&gt; [--off]</code> shows an auto-hidden zone as a floating overlay</li>
           </ul>
           <pre class="code-block"><code>maestro layout preset terminals-bottom
 maestro layout size right 480</code></pre>
