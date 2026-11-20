@@ -221,7 +221,7 @@ maestro focus "$SID"</code></pre>
 
         <div class="verb" id="verb-split">
           <h3>maestro split &lt;target&gt; <span class="opt">[--down]</span></h3>
-          <p>Split a tab into panes (tmux-style): spawns a shell pane beside <code>&lt;target&gt;</code> (below with <code>--down</code>).</p>
+          <p>Split the terminal zone (tmux-style): spawns a hosted shell pane in a new group beside <code>&lt;target&gt;</code> (below with <code>--down</code>). The pane is its own session with a <code>term:&lt;paneSessionId&gt;</code> dock key (see <code>layout show</code>).</p>
           <pre class="code-block"><code>maestro split "$MAESTRO_SESSION_ID" --down</code></pre>
         </div>
 
@@ -234,7 +234,7 @@ maestro detach-pane "$SID" --to "$OTHER"</code></pre>
 
         <div class="verb" id="verb-tab">
           <h3>maestro tab &lt;target&gt; <span class="opt">[--select]</span></h3>
-          <p>Add a shell tab (with its own split layout, remembered per session) to <code>&lt;target&gt;</code>'s terminal group and activate it. <code>--select</code> activates the tab containing <code>&lt;target&gt;</code>. Each tab has a <code>tabId</code> and a <code>term:&lt;tabId&gt;</code> dock key, shown under <code>list --full</code> and <code>layout show</code>. Closing the last pane of a tab closes the tab; closing a session's last tab closes the session.</p>
+          <p>Add a shell tab to <code>&lt;target&gt;</code>'s terminal-zone group and activate it. The tab is a hosted pane session: no separate <code>tabId</code>, its dock key is <code>term:&lt;paneSessionId&gt;</code> (shown under <code>list --full</code> and <code>layout show</code>). <code>--select</code> makes <code>&lt;target&gt;</code> the visible tab of its group instead of adding one. Closing a tab closes that pane; closing the last terminal of a session closes the session.</p>
           <pre class="code-block"><code>maestro tab "$MAESTRO_SESSION_ID"</code></pre>
         </div>
 
@@ -261,7 +261,7 @@ maestro zoom reset --view code-editor</code></pre>
           <p>Arrange the window's dock: side zones (left/right/bottom) around a splittable center. A <code>&lt;view&gt;</code> is <code>sessionTree</code>, <code>terminalDeck</code> (the terminal group, holding the focused session's <code>term:&lt;tabId&gt;</code> tabs), <code>field</code> (the maestro field), or a panel view id.</p>
           <ul class="flags">
             <li><code>show [--json]</code> prints zones, groups and views</li>
-            <li><code>move &lt;view&gt; --to &lt;left|right|bottom|center[:&lt;i.j&gt;]&gt;</code> docks a view; <code>split &lt;view&gt; --edge &lt;left|right|top|bottom&gt;</code> opens a new group</li>
+            <li><code>move &lt;view&gt; --to &lt;left|right|bottom|center[:&lt;i.j&gt;]|zone|panel|&lt;group id&gt;&gt;</code> docks a view; <code>split &lt;view&gt; --edge &lt;left|right|top|bottom&gt;</code> opens a new group. Terminals, web and editor tabs belong to a session and move only within its zone or panel; <code>--session &lt;target&gt;</code> picks the session that owns them (default: the calling session)</li>
             <li><code>toggle &lt;zone&gt; [--off]</code>, <code>collapse &lt;view&gt; [--off]</code> folds a group to its header, <code>hide &lt;view&gt;</code> removes a view such as stash or onHold, <code>reset</code>, <code>preset &lt;default|terminals-bottom|sidebar-right&gt;</code></li>
             <li><code>size &lt;zone&gt; &lt;px&gt;</code> or <code>size &lt;address|view&gt; &lt;a,b,...&gt;</code> sets zone and split sizes</li>
             <li><code>size &lt;view&gt; --width &lt;px&gt;</code> pins the column holding a view to a fixed width (60-8000); the terminal column takes the rest</li>
